@@ -26,7 +26,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #dc2626;
+  background: #1160cd;
 }
 
 /* Smooth scrolling */
@@ -43,13 +43,14 @@ body {
 
 /* Custom glow effect */
 .glow-red {
-  text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  text-shadow: 0 0 20px rgba(7, 63, 166, 0.5);
 }
 
 /* Shadow glow effects */
 .shadow-glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 20px rgba(7, 63, 166, 0.5), 0 0 40px rgba(7, 63, 166, 0.5);
 }
+
 
 /* Custom animations */
 @keyframes float {
