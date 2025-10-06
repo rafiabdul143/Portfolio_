@@ -36,68 +36,54 @@ const Contact = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
 
-  const templateParams = {
-    name: formData.name,    // matches {{name}} in user template
-    email: formData.email,  // matches {{email}}
-    title: formData.message
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const templateParams = {
+      name: formData.name,    
+      email: formData.email,  
+      title: formData.message 
+    };
+
+    // Auto-reply email to user
+    emailjs.send(
+      'service_fetsjrg',
+      'template_9pj70g8',   
+      templateParams,
+      'r55MTHf8fmHRBCmKj'
+    )
+    .then(() => {
+      toast.success('Your message has been sent!');
+      setFormData({ name: '', email: '', message: '' });
+    })
+    .catch(() => toast.error('Something went wrong!'));
+
+    // Notification email to admin
+    const adminTemplateParams = {
+      from_name: formData.name,   
+      reply_to: formData.email,   
+      message: formData.message   
+    };
+
+    emailjs.send(
+      'service_fetsjrg',        
+      'template_p208vad',       
+      adminTemplateParams,
+      'r55MTHf8fmHRBCmKj'
+    )
+    .then(() => console.log('Notification sent to admin!'))
+    .catch((err) => console.error('EmailJS admin error:', err));
   };
-
-  // Auto-reply email to user
-  emailjs.send(
-    'service_fetsjrg',
-    'template_9pj70g8',   // auto-reply template
-    templateParams,
-    'r55MTHf8fmHRBCmKj'
-  )
-  .then(() => {
-    toast.success('Your message has been sent!');
-    setFormData({ name: '', email: '', message: '' });
-  })
-  .catch(() => toast.error('Something went wrong!'));
-
-  // Notification email to admin
-const adminTemplateParams = {
-  from_name: formData.name,   // matches {{from_name}}
-  reply_to: formData.email,   // matches {{reply_to}}
-  message: formData.message   // matches {{message}}
-};
-
-  emailjs.send(
-    'service_fetsjrg',        // same service ID
-    'template_p208vad',       // admin notification template
-    adminTemplateParams,
-    'r55MTHf8fmHRBCmKj'
-  )
-  .then(() => console.log('Notification sent to admin!'))
-  .catch((err) => console.error('EmailJS admin error:', err));
-};
-
 
   return (
     <section id="contact" className="py-20 bg-black relative overflow-hidden">
 
-  {/* Background & Decorations */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,0,0.1),transparent_50%)]"></div>
-        {/* Floating tech elements */}
-        <div className="absolute top-20 left-10 w-4 h-4 bg-red-500 rounded-full animate-float-3d shadow-glow-red"></div>
-        <div className="absolute top-40 right-20 w-3 h-3 bg-red-400 rounded-full animate-float-3d-delayed shadow-glow-red" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-32 left-20 w-5 h-5 bg-red-500 rounded-full animate-float-3d shadow-glow-red" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-10 w-2 h-2 bg-red-400 rounded-full animate-float-3d-delayed shadow-glow-red" style={{animationDelay: '0.5s'}}></div>
-        {/* Geometric shapes */}
-        <div className="absolute top-1/4 left-1/4 w-8 h-8 border-2 border-red-500/30 rotate-45 animate-spin-slow"></div>
-        <div className="absolute top-3/4 right-1/4 w-6 h-6 border-2 border-red-400/40 animate-pulse-3d"></div>
-        <div className="absolute top-1/2 left-10 w-10 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent animate-slide-horizontal"></div>
-        <div className="absolute top-1/3 right-10 w-1 h-10 bg-gradient-to-b from-transparent via-red-500 to-transparent animate-slide-vertical"></div>
-        {/* Circuit & hologram */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 animate-grid-move"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-red-500/10 rounded-full animate-hologram"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-red-500/15 rounded-full animate-hologram-reverse"></div>
-      </div>
+      {/* Background & Decorations */}
+     <div className="absolute inset-0">
+        {/* Soft gradient spotlight */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f1a] via-[#0a0a0a] to-black opacity-90"></div>
+</div>
 
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
@@ -108,7 +94,7 @@ const adminTemplateParams = {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Get In <span className="text-red-500 glow-red">Touch</span>
+            Get In <span className="text-blue-500 glow-blue">Touch</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Ready to collaborate on your next project or discuss opportunities
@@ -135,7 +121,7 @@ const adminTemplateParams = {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
                   placeholder="Your name"
                 />
               </div>
@@ -151,7 +137,7 @@ const adminTemplateParams = {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -167,7 +153,7 @@ const adminTemplateParams = {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all duration-300 resize-none"
+                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 resize-none"
                   placeholder="Your message here..."
                 />
               </div>
@@ -176,7 +162,7 @@ const adminTemplateParams = {
                 type="submit"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:shadow-lg hover:shadow-red-500/25 flex items-center justify-center gap-3 group"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-3 group"
               >
                 <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 Send Message
@@ -204,9 +190,9 @@ const adminTemplateParams = {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-center gap-4 text-gray-300 hover:text-red-400 transition-colors duration-300 group"
+                    className="flex items-center gap-4 text-gray-300 hover:text-blue-400 transition-colors duration-300 group"
                   >
-                    <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
                       {info.icon}
                     </div>
                     <div>
@@ -228,27 +214,22 @@ const adminTemplateParams = {
           </motion.div>
         </div>
       </div>
- 
 
-
-    {/* Toast container must be somewhere in the JSX tree */}
-    <ToastContainer 
-      position="top-right" 
-      autoClose={5000} 
-      hideProgressBar={false} 
-      newestOnTop={false} 
-      closeOnClick 
-      rtl={false} 
-      pauseOnFocusLoss 
-      draggable 
-      pauseOnHover 
-      theme="colored"
-    />
-  </section>
-);
-
- 
- 
+      {/* Toast container must be somewhere in the JSX tree */}
+      <ToastContainer 
+        position="top-right" 
+        autoClose={5000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+        theme="colored"
+      />
+    </section>
+  );
 };
 
 export default Contact;

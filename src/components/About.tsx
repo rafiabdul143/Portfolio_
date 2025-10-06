@@ -1,66 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Code, Database, Cpu, Globe, Award, BookOpen, GitBranch, Monitor, FileText, Users } from 'lucide-react';
+import rafiPhoto from '../assets/rafiPhoto.jpg';
 import BadgesSection from './BadgesSection';
-import { Code, Database, Cpu, Globe, Award, BookOpen } from 'lucide-react';
-import rafiPhoto from '../assets/rafiPhoto.jpg'; // Make sure extension matches
 
-const About = () => {
+const About: React.FC = () => {
   const highlights = [
-    {
-      icon: <Award className="w-6 h-6" />,
-      title: 'Data Science Internship',
-      description: 'NIT Trichy'
-    },
-    {
-      icon: <Globe className="w-6 h-6" />,
-      title: 'Cybersecurity Experience',
-      description: 'Cisco Packet Tracer'
-    },
-    {
-      icon: <Code className="w-6 h-6" />,
-      title: 'Open Source Contributor',
-      description: 'Multiple Projects'
-    },
-    {
-      icon: <BookOpen className="w-6 h-6" />,
-      title: 'CSE with IoT Specialization',
-      description: 'KITS Warangal'
-    }
+    { icon: <Award className="w-6 h-6" />, title: 'Data Science Internship', description: 'NIT Trichy' },
+    { icon: <Globe className="w-6 h-6" />, title: 'Cybersecurity Experience', description: 'Cisco Packet Tracer' },
+    { icon: <Code className="w-6 h-6" />, title: 'Open Source Contributor', description: 'Multiple Projects' },
+    { icon: <BookOpen className="w-6 h-6" />, title: 'CSE with IoT Specialization', description: 'KITS Warangal' }
   ];
 
-  const floatingIcons = [
-    { icon: <Code className="w-8 h-8" />, delay: 0 },
-    { icon: <Database className="w-8 h-8" />, delay: 0.5 },
-    { icon: <Cpu className="w-8 h-8" />, delay: 1 },
-    { icon: <Globe className="w-8 h-8" />, delay: 1.5 }
+  const timeline = [
+    { year: '2022', description: 'HTML, CSS, JavaScript – built first web projects.' },
+    { year: '2023', description: 'React.js, Node.js, MongoDB – Internship at Cisco.' },
+    { year: '2024', description: 'ASP.NET Core, SQL Server, IoT projects – Internship at NIT Trichy.' },
+    { year: '2025', description: 'ERP & Inventory systems, DevOps, portfolio projects.' },
   ];
+
+  const skills = {
+    frontend: ['HTML', 'CSS', 'JavaScript', 'React.js', 'TailwindCSS'],
+    backend: ['Node.js', 'ASP.NET Core', 'Python'],
+    versionControl: ['Git', 'GitHub', 'GitLab'],
+    databases: ['MongoDB', 'SQL Server', 'MySQL']
+  };
+
+  const softSkills = ['Problem Solving', 'Time Management', 'Communication', 'Teamwork', 'Creativity', 'Adaptability'];
 
   return (
-    <section id="about" className="py-20 bg-black relative overflow-hidden">
-        {/* Background & Decorations */}
-     <div className="absolute inset-0">
-  {/* Gradient overlay: black at top → dark red at bottom */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-red-950/30"></div>
+    <section id="about" className="py-20 bg-black relative overflow-hidden text-white">
+      {/* Background decorations */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-red-950/30"></div>
 
-  {/* Radial subtle glows to soften the transition */}
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(100,0,0,0.05),transparent_60%)]"></div>
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(100,0,0,0.05),transparent_60%)]"></div>
-
-  {/* Floating tech elements */}
-  <div className="absolute top-20 left-10 w-4 h-4 bg-red-800/35 rounded-full animate-float-3d shadow-glow-red/35"></div>
-  <div className="absolute top-40 right-20 w-3 h-3 bg-red-700/30 rounded-full animate-float-3d-delayed shadow-glow-red/30" style={{ animationDelay: '1s' }}></div>
-  <div className="absolute bottom-32 left-20 w-5 h-5 bg-red-800/30 rounded-full animate-float-3d shadow-glow-red/30" style={{ animationDelay: '2s' }}></div>
-  <div className="absolute bottom-20 right-10 w-2 h-2 bg-red-700/25 rounded-full animate-float-3d-delayed shadow-glow-red/25" style={{ animationDelay: '0.5s' }}></div>
-
-  {/* Geometric shapes */}
-  <div className="absolute top-1/4 left-1/4 w-8 h-8 border-2 border-red-800/30 rotate-45 animate-spin-slow"></div>
-  <div className="absolute top-3/4 right-1/4 w-6 h-6 border-2 border-red-700/35 animate-pulse-3d"></div>
-  <div className="absolute top-1/2 left-10 w-10 h-1 bg-gradient-to-r from-transparent via-red-800/25 to-transparent animate-slide-horizontal"></div>
-  <div className="absolute top-1/3 right-10 w-1 h-10 bg-gradient-to-b from-transparent via-red-800/25 to-transparent animate-slide-vertical"></div>
-
-  {/* Circuit/grid lines */}
-  <div className="absolute inset-0 bg-[linear-gradient(rgba(100,0,0,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(100,0,0,0.15)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 animate-grid-move"></div>
-</div>
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -74,74 +46,100 @@ const About = () => {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left side - Image and floating icons */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          {/* Left - Image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative mx-auto w-80 h-80"
           >
-            <div className="relative w-80 h-80 mx-auto">
-              <div className="w-full h-full bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center relative overflow-hidden">
-                {/* Actual Image */}
-                <div className="absolute inset-0 rounded-xl overflow-hidden">
-                  <img
-                    src={rafiPhoto}
-                    alt="Abdul Rafi"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Floating tech icons */}
-                {floatingIcons.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: item.delay }}
-                    viewport={{ once: true }}
-                    className={`absolute text-red-400 ${
-                      index === 0 ? '-top-4 -right-4' :
-                      index === 1 ? '-bottom-4 -right-4' :
-                      index === 2 ? '-bottom-4 -left-4' :
-                      '-top-4 -left-4'
-                    }`}
-                  >
-                    <div className="w-16 h-16 bg-gray-900 border border-red-500/30 rounded-lg flex items-center justify-center animate-pulse">
-                      {item.icon}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+            <div className="w-full h-full bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center overflow-hidden relative">
+              <img src={rafiPhoto} alt="Abdul Rafi" className="w-full h-full object-cover rounded-xl" />
             </div>
           </motion.div>
 
-          {/* Right side - Content */}
+          {/* Right - Content */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-10"
           >
+            {/* Intro */}
             <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
               <p>
-                Hi, I'm <span className="text-red-400 font-semibold">Abdul Rafi</span>, a passionate and hardworking Computer Science and Engineering student with a specialization in <span className="text-red-400">Internet of Things (IoT)</span> at KITS Warangal.
+                Hi, I'm <span className="text-red-400 font-semibold">Abdul Rafi</span>, a passionate and hardworking Computer Science and Engineering student specialized in <span className="text-red-400">Internet of Things (IoT)</span> at KITS Warangal.
               </p>
-              
               <p>
-                I love solving real-world problems using technology. From desktop apps to full-stack web development and IoT systems, I aim to build <span className="text-red-400">smart, scalable, and impactful solutions</span>.
-              </p>
-              
-              <p>
-                I've completed a <span className="text-red-400">Data Science internship at NIT Trichy</span>, worked on cybersecurity with Cisco Packet Tracer, and contributed to several open-source and personal tech projects.
+                I build <span className="text-red-400">smart, scalable, and impactful solutions</span> using technology, whether web applications, IoT systems, or full-stack projects.
               </p>
             </div>
 
+            {/* Education */}
+            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-4">
+              <h3 className="text-xl font-semibold text-red-400 mb-2">Education</h3>
+              <p>B.Tech in Computer Science Engineering (CSE) specialized in IoT</p>
+              <p>CGPA: 7.73</p>
+            </div>
+
+            {/* Technical Skills */}
+            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-4">
+              <h3 className="text-xl font-semibold text-red-400 mb-2">Technical Skills</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-white">Frontend</h4>
+                  <p className="text-gray-300">{skills.frontend.join(', ')}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Backend</h4>
+                  <p className="text-gray-300">{skills.backend.join(', ')}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Version Control</h4>
+                  <p className="text-gray-300">{skills.versionControl.join(', ')}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Databases</h4>
+                  <p className="text-gray-300">{skills.databases.join(', ')}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Soft Skills */}
+            <div>
+              <h3 className="text-xl font-semibold text-red-400 mb-4">Soft Skills</h3>
+              <div className="flex flex-wrap gap-3">
+                {softSkills.map((skill, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.05, boxShadow: '0 0 15px #f87171' }}
+                    className="px-4 py-2 bg-gray-800 rounded-lg border border-gray-700 cursor-pointer transition-all duration-300"
+                  >
+                    {skill}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="relative pl-8 border-l-2 border-red-500">
+              <h3 className="text-xl font-semibold text-red-400 mb-4">Timeline</h3>
+              <ul className="space-y-8">
+                {timeline.map((item, index) => (
+                  <li key={index} className="relative">
+                    <span className="absolute -left-5 top-0 w-3 h-3 bg-red-500 rounded-full"></span>
+                    <p className="font-semibold text-white">{item.year}</p>
+                    <p className="text-gray-300">{item.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
               {highlights.map((highlight, index) => (
                 <motion.div
                   key={index}
@@ -156,19 +154,19 @@ const About = () => {
                       {highlight.icon}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-white group-hover:text-red-400 transition-colors duration-300">
-                        {highlight.title}
-                      </h4>
+                      <h4 className="font-semibold text-white group-hover:text-red-400 transition-colors duration-300">{highlight.title}</h4>
                       <p className="text-sm text-gray-400">{highlight.description}</p>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
+
           </motion.div>
         </div>
       </div>
-      <BadgesSection/>
+
+      <BadgesSection />
     </section>
   );
 };

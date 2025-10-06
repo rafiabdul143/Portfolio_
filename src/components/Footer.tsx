@@ -3,18 +3,38 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Heart, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
-  const socialLinks = [
-    { icon: <Github className="w-5 h-5" />, href: 'https://github.com/rafiabdul143', label: 'GitHub' },
-    { icon: <Linkedin className="w-5 h-5" />, href: 'https://www.linkedin.com/in/rafiabdul143', label: 'LinkedIn' },
-    { icon: <Twitter className="w-5 h-5" />, href: 'https://twitter.com/your_twitter_handle', label: 'Twitter' },
-    { icon: <Instagram className="w-5 h-5" />, href: 'https://instagram.com/your_instagram_handle', label: 'Instagram' },
-    { icon: <Mail className="w-5 h-5" />, href: 'mailto:rafiabdul143@gmail.com', label: 'Email' }
+ const socialLinks = [
+    {
+      icon: <Github className="w-5 h-5" />,
+      href: 'https://github.com/rafiabdul143',
+      label: 'GitHub',
+    },
+    {
+      icon: <Linkedin className="w-5 h-5" />,
+      href: 'https://www.linkedin.com/in/rafiabdul143',
+      label: 'LinkedIn',
+    },
+    {
+      icon: <Twitter className="w-5 h-5" />,
+      href: 'https://x.com/Abdul_rafi143?t=gk6TlABJWTNne7xFJjaWgA&s=09',
+      label: 'Twitter',
+    },
+    {
+      icon: <Instagram className="w-5 h-5" />,
+      href: 'https://www.instagram.com/abdul_rafi143?igsh=MWJsZ2ZmOG04aWx3NA==',
+      label: 'Instagram',
+    },
+    {
+      icon: <Mail className="w-5 h-5" />,
+      href: 'mailto:rafiabdul143@gmail.com',
+      label: 'Email',
+    },
   ];
 
   return (
     <footer className="bg-black border-t border-gray-800 py-8 relative overflow-hidden">
       {/* Background elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,0,0.05),transparent_70%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(13,110,253,0.05),transparent_70%)]"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between">
@@ -24,10 +44,10 @@ const Footer = () => {
               whileHover={{ scale: 1.05 }}
               className="text-xl font-bold text-white"
             >
-              <span className="text-red-500">Abdul</span>Rafi
+              <span className="text-blue-500">Abdul</span>Rafi
             </motion.div>
             <div className="text-gray-400 text-sm">
-              ©  All rights reserved.
+              © All rights reserved.
             </div>
           </div>
 
@@ -41,7 +61,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.2, y: -2 }}
                 whileTap={{ scale: 0.9 }}
-                className="text-gray-400 hover:text-red-400 transition-colors duration-300"
+                className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
                 aria-label={link.label}
               >
                 {link.icon}
