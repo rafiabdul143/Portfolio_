@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Stats from '../components/Stats';
+
 import BadgesSection from '../components/BadgesSection';
 import {
   Code,
@@ -206,7 +206,7 @@ const About: React.FC = () => {
         ></motion.div>
       </div>
 
-      <Stats />
+      
       <BadgesSection />
     </section>
   );
