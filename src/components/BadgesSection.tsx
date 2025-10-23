@@ -4,7 +4,7 @@ import DataAnalyticsImg from '../assets/data analytics.png';
 
 import google_1 from '../assets/google_1.png';
 import networking from '../assets/Networking.png';
-import cybersecurity from '../assets/cybersecurity.png';
+import cybersecurity from '../assets/Cybersecurity.png';
 import amazon from '../assets/amazon_1.png';
 import google_2 from '../assets/google_2.png';
 import google_3 from '../assets/google_2.png';
