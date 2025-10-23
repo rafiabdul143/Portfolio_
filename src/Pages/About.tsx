@@ -206,7 +206,9 @@ const About: React.FC = () => {
         ></motion.div>
       </div>
 
-      
+
+
+
       <BadgesSection />
     </section>
   );

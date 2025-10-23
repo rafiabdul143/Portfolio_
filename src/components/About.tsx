@@ -165,7 +165,7 @@ const About: React.FC = () => {
           </motion.div>
         </div>
       </div>
-
+      {/* Badges Section */}
       <BadgesSection />
     </section>
   );

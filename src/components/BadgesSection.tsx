@@ -2,17 +2,32 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import DataAnalyticsImg from '../assets/data analytics.png';
 import footer from "./Footer";
+import google_1 from '../assets/google_1.png';
+import networking from '../assets/networking.png';
+import cybersecurity from '../assets/cybersecurity.png';
+import amazon from '../assets/amazon_1.png';
+import google_2 from '../assets/google_2.png';
+import google_3 from '../assets/google_2.png';
+import Ccna from '../assets/Ccna.png'
+import python_1 from '../assets/python_1.png';
+import amazon1 from '../assets/amazon_2.png';
+import amazon2 from '../assets/amazon_3.png';
+import amazon3 from '../assets/amazon_4.png';
 
 // Example badge data
 const badges = [
-  { img: DataAnalyticsImg, link: "https://example.com/1", name: "Data Analytics", issuer: "Amazon Web Services" },
-  { img: "https://via.placeholder.com/80?text=Badge2", link: "https://example.com/2", name: "SQL", issuer: "Oracle" },
-  { img: "https://via.placeholder.com/80?text=Badge3", link: "https://example.com/3", name: "React Expert", issuer: "Meta" },
-  { img: "https://via.placeholder.com/80?text=Badge4", link: "https://example.com/4", name: "ML Engineer", issuer: "Google Cloud" },
-  { img: "https://via.placeholder.com/80?text=Badge5", link: "https://example.com/5", name: "DevOps Pro", issuer: "Docker" },
-  { img: "https://via.placeholder.com/80?text=Badge6", link: "https://example.com/6", name: "Data Analyst", issuer: "IBM" },
-  { img: "https://via.placeholder.com/80?text=Badge7", link: "https://example.com/7", name: "Security+", issuer: "CompTIA" },
-  { img: "https://via.placeholder.com/80?text=Badge8", link: "https://example.com/8", name: "Kubernetes", issuer: "CNCF" },
+  { img: DataAnalyticsImg, link: "https://www.linkedin.com/posts/abdulrafi0870_data-science-internship-at-nit-trichy-activity-7225038436569595904-TMte?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEOf1RMBnMTpFDWRJN_Fj4ZQJTwrG57J6-8", name: "Data Analytics", issuer: "NIT TRICHY" },
+  { img: google_1, link: "https://www.credly.com/earner/earned/badge/89d0f82c-5eed-48d9-9f30-d04fb259bc28", name: " Cloud Computing", issuer: "Google Cloud " },
+  { img: google_2, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "Google Cloud Network", issuer: "Google Cloud" },
+   { img: google_3, link: "https://www.credly.com/earner/earned/badge/540b7f1e-800a-45b6-a36d-ecc1f003fe7e", name: "Load Balancer", issuer: "Google Cloud" },
+  { img: cybersecurity, link: "https://www.credly.com/badges/1b34e777-19e8-4393-8cf5-9b26f011b19c", name: "CyberSecurity", issuer: "Cisco Networks " },
+  { img: networking, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: "Networking", issuer: "Cisco Networks" },
+  { img: python_1, link: "https://www.credly.com/badges/b233454e-1ed7-4b85-aeb3-5c6730824648", name: "Python Essentials", issuer: "Cisco Networks" },
+  { img: Ccna, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CCNA", issuer: "Cisco Network" },
+   { img: amazon, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "ServerLess", issuer: "AWS Educate" },
+    { img: amazon1, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: " AWS Storage", issuer: "AWS Educate" },
+  { img: amazon2, link: "https://www.credly.com/badges/b233454e-1ed7-4b85-aeb3-5c6730824648", name: "DataBases", issuer: "AWS Educate" },
+  { img: amazon3, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CloudsOps", issuer: "AWS Educate" },
 ];
 
 const BadgeCard: React.FC<{ badge: typeof badges[0]; index: number }> = ({ badge, index }) => {
