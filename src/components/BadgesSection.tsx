@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import DataAnalyticsImg from '../assets/data analytics.png';
-import footer from "./Footer";
+
 import google_1 from '../assets/google_1.png';
 import networking from '../assets/networking.png';
 import cybersecurity from '../assets/cybersecurity.png';
@@ -27,7 +27,7 @@ const badges = [
    { img: amazon, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "ServerLess", issuer: "AWS Educate" },
     { img: amazon1, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: " AWS Storage", issuer: "AWS Educate" },
   { img: amazon2, link: "https://www.credly.com/badges/b233454e-1ed7-4b85-aeb3-5c6730824648", name: "DataBases", issuer: "AWS Educate" },
-  { img: amazon3, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CloudsOps", issuer: "AWS Educate" },
+  { img: amazon3, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CloudsOp", issuer: "AWS Educate" },
 ];
 
 const BadgeCard: React.FC<{ badge: typeof badges[0]; index: number }> = ({ badge, index }) => {

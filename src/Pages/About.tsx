@@ -196,7 +196,7 @@ const About: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Optional concluding section */}
+        {/* Optional concluding    section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

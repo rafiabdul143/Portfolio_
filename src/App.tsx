@@ -21,7 +21,7 @@ function App() {
               path="/"
               element={
                 <>
-                  <div id="home">
+                  <div id="home ">
                     <Hero />
                   </div>
                   <Skills />
