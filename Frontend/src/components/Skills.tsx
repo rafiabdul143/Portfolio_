@@ -1,5 +1,19 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import {
+  FaBootstrap,
+  FaGithub,
+} from "react-icons/fa";
+import { FaMicrosoft} from "react-icons/fa6";
+import { VscAzure } from "react-icons/vsc";
+import { VscAzureDevops } from "react-icons/vsc";
+import {
+  SiExpress,
+  SiGnubash,
+
+} from "react-icons/si";
+import { FaChartBar } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 import { FaAndroid, FaMicrochip, FaReact, FaHtml5, FaNodeJs, FaPython, FaJava, FaDocker,FaAws, FaLinux, FaGitAlt } from "react-icons/fa";
 import { SiAndroidstudio, SiTailwindcss, SiDotnet, SiMongodb, SiMysql,SiKubernetes, SiFirebase } from "react-icons/si";
@@ -8,21 +22,28 @@ const techStack = [
   { name: "React.js", icon: <FaReact className="text-sky-400" /> },
   { name: "HTML5", icon: <FaHtml5 className="text-orange-500" /> },
   { name: "TailwindCSS", icon: <SiTailwindcss className="text-sky-400" /> },
+  { name: "Bootstrap", icon: <FaBootstrap className="text-purple-500" /> },
   { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
+  { name: "Express.js", icon: <SiExpress className="text-gray-300" /> },
   { name: "Python", icon: <FaPython className="text-yellow-400" /> },
   { name: "Java", icon: <FaJava className="text-orange-400" /> },
   { name: ".NET", icon: <SiDotnet className="text-indigo-500" /> },
   { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
   { name: "MySQL", icon: <SiMysql className="text-blue-500" /> },
   { name: "Git", icon: <FaGitAlt className="text-red-500" /> },
+  { name: "GitHub", icon: <FaGithub className="text-white" /> },
   { name: "Docker", icon: <FaDocker className="text-blue-500" /> },
   { name: "Kubernetes", icon: <SiKubernetes className="text-sky-400" /> },
   { name: "AWS", icon: <FaAws className="text-yellow-500" /> },
   { name: "Firebase", icon: <SiFirebase className="text-yellow-400" /> },
   { name: "Linux", icon: <FaLinux className="text-gray-300" /> },
-  { name: "Arduino IDE", icon: <FaAndroid className="text-green-500" /> },
-  { name: "IoT / MCU", icon: <FaMicrochip className="text-red-400" /> },
-  { name: "Android Studio", icon: <SiAndroidstudio className="text-green-600" /> },
+  {name: "Azure", icon: <VscAzure className="text-blue-600" /> },
+  { name: "DevOps", icon: <VscAzureDevops className="text-blue-600" /> },
+  { name: "Fabric", icon: <FaMicrosoft className="text-blue-500" /> },
+  
+{ name: "Power BI", icon: <FaChartBar className="text-yellow-500" /> },
+  { name: "IoT/MCU", icon: <FaMicrochip className="text-red-400" /> },
+  { name: "GCP", icon: <FcGoogle className="text-green-600" /> },
 ];
 
 const rowVariants = {

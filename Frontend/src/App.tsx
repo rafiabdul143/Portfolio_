@@ -9,7 +9,7 @@ import Resume from './Pages/Resume';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AboutPage from "./Pages/About";
-
+import ProjectPage from "./Pages/ProjectPage";
 function App() {
   return (
     <Router>
@@ -31,6 +31,7 @@ function App() {
                 </>
               }
             />
+            <Route path="/project/:slug" element={<ProjectPage />} />
              <Route path="/about" element={<AboutPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/resume" element={<Resume/>} />

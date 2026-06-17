@@ -4,12 +4,15 @@ import python from '../assets/python.png';
 import ecommerce from '../assets/Ecom.png';
 import covid from '../assets/covid.png';
 import weopon from '../assets/weopon.png';
-
+import { Link } from "react-router-dom";
 import smart from '../assets/smarte.jpg';
 import skillnet from '../assets/skillnet.png';
 import share from '../assets/share.jpg';
 import mjpcollege from '../assets/govt.png';
-
+import epf from '../assets/EPF.png';
+import buniyaadec from '../assets/Buniyaadec.png';
+import { useNavigate } from "react-router-dom";
+import resumeForge from '../assets/resumeForge.png'
 import {
   ExternalLink,
   Github,
@@ -26,9 +29,12 @@ import {
 const Projects = () => {
   const [showMore, setShowMore] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const navigate = useNavigate();
 
   const projects = [
     {
+      slug: "skillnet-platform",
   title: "SkillNet Platform",
   description:
     "A professional networking and skill-sharing platform that connects users based on expertise, enabling collaboration, project posting, and portfolio showcasing with secure authentication.",
@@ -39,7 +45,69 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
   status: "ongoing",
   image: skillnet,
 },
+ 
+    {
+slug: "resumeforge",
+
+title: "ResumeForge",
+
+description:
+"An AI-powered ATS Resume Builder that enables users to create professional, recruiter-friendly resumes with real-time preview, modern templates, PDF export, and ATS optimization features.",
+
+tech: [
+"React",
+"Vite",
+"JavaScript",
+"Tailwind CSS",
+"HTML5",
+"CSS3",
+"PDF Export",
+"Local Storage"
+],
+
+icon: <Users className="w-5 h-5 text-blue-400" />,
+
+github: "https://github.com/rafiabdul143/ATSFreeResumeMaker",
+
+live: "https://your-vercel-link.vercel.app",
+
+status: "ongoing",
+
+image: resumeForge,
+},
 {
+  slug: "epf-withdrawal-advisor",
+  title: "EPF Withdrawal Eligibility Advisor",
+  description:"A rule-based web application that determines EPF withdrawal eligibility and calculates the maximum withdrawable amount based on official EPFO guidelines.",
+  tech: ["React.js", "JavaScript", "Tailwind CSS"],
+  icon: <Shield className="w-5 h-5 text-blue-400" />,
+  github: "https://github.com/rafiabdul143/EPF-Advisor", // update if needed
+  live: "https://epf-advisor.vercel.app/", // replace with deployed link (Netlify/Vercel)
+  status: "completed",
+  image: epf,
+},
+{
+  slug: "buniyaadec-civil-career-guidance",
+  title: "Buniyaadec Civil Career Guidance Platform",
+  description:
+    "Developed a freelance web platform for a Dubai-based client to guide civil engineering students and professionals with structured career paths, resources, and an intuitive user experience.",
+  tech: [
+    "React.js",
+    "JavaScript",
+    "Tailwind CSS",
+    "HTML5",
+    "CSS3",
+    "Responsive Design",
+    "UI/UX Design"
+  ],
+  icon: <Globe className="w-5 h-5 text-blue-400" />,
+  github: "https://github.com/rafiabdul143/Civil-University-1",
+  live: "https://civil-university-1-ia5943v0v-rafiabdul143s-projects.vercel.app/",
+  status: "completed",
+  image: buniyaadec,
+},
+{
+  slug: "stocks-prediction-system",
   title: "Stocks Prediction System",
   description:
     "Professional AI-powered stock market prediction system that leverages machine learning models to forecast share price trends with interactive real-time data visualization. Deployed on AWS using EC2, S3, and integrated ML services for scalability and performance.",
@@ -64,6 +132,7 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
   image: share,
 },
 {
+  slug: "e-commerce-website",
   title: "E-Commerce Website",
   description:
     "A full-stack MERN e-commerce platform featuring user authentication, product management, and an intuitive shopping cart system. Built with a responsive and modern UI using TailwindCSS, it leverages Redux for efficient state management and RESTful APIs for seamless backend integration.",
@@ -75,6 +144,7 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
   image: ecommerce,
 },
 {
+  slug: "mjp-college-website",
   title: "MJP Women's Government College Website",
   description:
     "Collaborated as a freelance developer to design and build the official website for MJP Women's Government College, Wargal. The platform features dynamic content management, responsive UI, and real-time data updates powered by Firebase. It enhances the college's digital presence through an intuitive interface and seamless navigation experience.",
@@ -100,6 +170,7 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
 
 
     {
+      slug: "face-recognition-attendance-system",
       title: "Face Recognition Attendance System",
       description:
         "This project is a cutting-edge real-time attendance system that combines advanced face recognition and a sleek Tkinter interface, setting a new benchmark in accuracy, automation, and user-friendly design to make attendance management smarter and more efficient.",
@@ -111,7 +182,9 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
   image: python,
 
     },
+ 
     {
+      slug: "smart-irrigation-system-iot",
       title: "Smart Irrigation System (IoT)",
       description:
         "Moisture-based auto irrigation system with Arduino, servo, and efficient water management.",
@@ -122,8 +195,10 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
       status: "completed",
       image: smart,
     },
+    
 
     {
+      slug: "covid-info-system",
       title: "COVID Info System",
       description:
         "Desktop app for real-time COVID-19 data visualization with APIs and simple UI.",
@@ -140,6 +215,7 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
 
    
    {
+    slug: "weapon-detection-system",
   title: "Weapon Detection System",
   description:
     "AI-based system that detects weapons in real-time using deep learning and computer vision techniques.",
@@ -225,73 +301,86 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
           viewport={{ once: true }}
           className="grid md:grid-cols-2 gap-6"
         >
-          {visibleProjects.map((project, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-blue-500 transition-all"
-            >
-              {/* ==== Image First ==== */}
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-54 object-cover"
-              />
+       {visibleProjects.map((project, index) => (
+  <motion.div
+    key={index}
+    variants={cardVariants}
+    whileHover="hover"
+    onClick={() => navigate(`/project/${project.slug}`)}
+    className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-blue-500 transition-all cursor-pointer"
+  >
+    {/* ==== Image First ==== */}
+    <img
+      src={project.image}
+      alt={project.title}
+      className="w-full h-54 object-cover"
+    />
 
-              <div className="p-5 flex flex-col gap-3">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white font-semibold text-sm">
-                    <span>{project.icon}</span>
-                    {project.title}
-                  </div>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
-                      project.status === "completed"
-                        ? "bg-green-600 text-white"
-                        : "bg-yellow-500 text-black"
-                    }`}
-                  >
-                    {project.status}
-                  </span>
-                </div>
+    <div className="p-5 flex flex-col gap-3">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-white font-semibold text-sm">
+          <span>{project.icon}</span>
+          {project.title}
+        </div>
 
-                {/* Description */}
-                <p className="text-xs text-gray-400">{project.description}</p>
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full ${
+            project.status === "completed"
+              ? "bg-green-600 text-white"
+              : "bg-yellow-500 text-black"
+          }`}
+        >
+          {project.status}
+        </span>
+      </div>
 
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {project.tech.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-0.5 text-[10px] bg-blue-500/20 text-blue-300 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+      {/* Description */}
+      <p className="text-xs text-gray-400">
+        {project.description}
+      </p>
 
-                {/* Buttons */}
-                <div className="flex gap-2 mt-3">
-                  <a
-                    href={project.github}
-                    className="flex items-center gap-1 px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-all"
-                  >
-                    <Github className="w-3.5 h-3.5" /> Code
-                  </a>
-                  <a
-                    href={project.live}
-                    className="flex items-center gap-1 px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" /> Demo
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+      {/* Tech Stack */}
+      <div className="flex flex-wrap gap-1 mt-1">
+        {project.tech.map((tech, i) => (
+          <span
+            key={i}
+            className="px-2 py-0.5 text-[10px] bg-blue-500/20 text-blue-300 rounded-full"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
 
+      {/* Buttons */}
+      <div className="flex gap-2 mt-3">
+        <a
+          href={project.github}
+          onClick={(e) => e.stopPropagation()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-all"
+        >
+          <Github className="w-3.5 h-3.5" />
+          Code
+        </a>
+
+        <a
+          href={project.live}
+          onClick={(e) => e.stopPropagation()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Demo
+        </a>
+      </div>
+    </div>
+  </motion.div>
+))}
+  </motion.div>
         {/* ==== Show More ==== */}
         {filteredProjects.length > 4 && (
           <div className="text-center mt-8">
@@ -325,3 +414,4 @@ tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwin
 };
 
 export default Projects;
+ 

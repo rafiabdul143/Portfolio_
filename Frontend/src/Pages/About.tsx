@@ -182,7 +182,7 @@ const About: React.FC = () => {
                       <CloudLightning className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-1">Software Trainee at Quadrant Technologies</h4>
+                      <h4 className="font-semibold text-blue-300 mb-1">Software Engineer at Quadrant Technologies</h4>
                       <p className="text-gray-300 text-sm">
                         Currently mastering <strong>SQL Server</strong>, <strong>Azure Ecosystem</strong>, <strong>Networking</strong>, 
                         <strong> DevOps Administration</strong>, and <strong>Storage solutions</strong>. Actively expanding technical domain 
