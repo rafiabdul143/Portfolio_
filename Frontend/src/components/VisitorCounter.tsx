@@ -7,20 +7,22 @@ const VisitorCounter = () => {
   const [count, setCount] = useState(0);
 const hasFetched = useRef(false);
   
-  useEffect(() => {
+useEffect(() => {
+  if (hasFetched.current) return;
+  hasFetched.current = true;
+
   const hasVisited = localStorage.getItem("visited");
 
   const fetchData = async () => {
     try {
       if (!hasVisited) {
-        // Immediately mark visited BEFORE API call
         localStorage.setItem("visited", "true");
 
-        const res = await fetch("http://localhost:5000/visit");
+        const res = await fetch("https://portfolio-syc5.onrender.com/visit");
         const data = await res.json();
         setCount(data.count);
       } else {
-        const res = await fetch("http://localhost:5000/count");
+        const res = await fetch("https://portfolio-syc5.onrender.com/count");
         const data = await res.json();
         setCount(data.count);
       }

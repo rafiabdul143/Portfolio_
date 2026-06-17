@@ -12,8 +12,10 @@ const Hero = () => {
 const navigate = useNavigate();
 
   const titles = [
+    "Microsoft Certified",
     "Full-Stack Developer",
     ".NET Developer",
+    "Fabric Expert",
     "Desktop Developer",
     "IoT Enthusiast",
     "UI/UX Designer",
