@@ -20,42 +20,117 @@ import {
   DatabaseZap,
   CloudLightning,
   Layers,
+  TrendingUp,
 } from 'lucide-react';
 import rafiPhoto from '../assets/rafiPhoto.jpg';
 
 const highlights = [
-  { 
-    icon: <Server className="w-5 h-5" />, 
-    title: 'Software Trainee', 
-    description: 'Quadrant Technologies - Azure, DevOps, SQL Server' 
+  {
+    icon: <Server className="w-5 h-5" />,
+    title: "Software Engineer",
+    description: "Quadrant Technologies • Microsoft Fabric"
   },
-  { 
-    icon: <Award className="w-5 h-5" />, 
-    title: 'Data Science Internship', 
-    description: 'NIT Trichy' 
+  {
+    icon: <Database className="w-5 h-5" />,
+    title: "Microsoft Fabric",
+    description: "Lakehouse • Warehouse • PySpark • OneLake"
   },
-  { 
-    icon: <Globe className="w-5 h-5" />, 
-    title: 'Cybersecurity Experience', 
-    description: 'Cisco Packet Tracer' 
+  {
+    icon: <Award className="w-5 h-5" />,
+    title: "Microsoft Certified",
+    description: "AZ-104  AZ-400 DP-600 DP-700 DP-800  GH-200"
   },
-  { 
-    icon: <Code className="w-5 h-5" />, 
-    title: 'Open Source Contributor', 
-    description: 'Multiple Projects' 
+  {
+    icon: <Briefcase className="w-5 h-5" />,
+    title: "Data Science Intern",
+    description: "NIT Trichy"
+  },
+  {
+    icon: <Globe className="w-5 h-5" />,
+    title: "Networking",
+    description: "Cisco Packet Tracer"
+  },
+  {
+    icon: <Code className="w-5 h-5" />,
+    title: "Open Source",
+    description: "GitHub Contributions"
   },
 ];
 
 const skills = {
-  cloud: ['Azure ', 'Cloud Basics', 'Networking','Dockers', 'DevOps', 'AWS (S3, EC2)'],
-  databases: ['SQL Server', 'MongoDB', 'MySQL'],
-  frontend: ['HTML', 'CSS', 'JavaScript', 'React.js', 'TailwindCSS'],
-  backend: ['Node.js', 'ASP.NET Core', 'Python'],
-  iot: ['C/C++', 'Microcontrollers', 'MQTT', 'Sensor Integration'],
-  versionControl: ['Git', 'GitHub', 'GitLab', 'CI/CD'],
+  microsoftFabric: [
+    'Lakehouse',
+    'Data Warehouse',
+    'OneLake',
+    'Data Pipelines',
+    'PySpark',
+    'Spark Notebooks',
+    'Power BI',
+    'Semantic Models',
+  ],
+
+  cloud: [
+    'Azure',
+    'Azure DevOps',
+    'SQL Server',
+    'Networking',
+    'Storage',
+    'Identity & Access Management',
+  ],
+
+  devops: [
+    'Git',
+    'GitHub',
+    'GitLab',
+    'Azure DevOps',
+    'CI/CD',
+    'Docker',
+    'Kubernetes',
+    'Terraform',
+  ],
+
+  frontend: [
+    'React',
+    'TypeScript',
+    'JavaScript',
+    'Tailwind CSS',
+    'HTML5',
+    'CSS3',
+  ],
+
+  backend: [
+    'ASP.NET Core',
+    'Node.js',
+    'Python',
+  ],
+
+  databases: [
+    'SQL Server',
+    'MongoDB',
+    'MySQL',
+  ],
 };
 
 const softSkills = ['Problem Solving', 'Time Management', 'Communication', 'Teamwork', 'Creativity', 'Adaptability', 'Quick Learner'];
+
+const traineeTraining = ['SQL Server', 'Azure', 'Networking', 'Storage', 'DevOps Fundamentals', 'Microsoft Fabric Fundamentals'];
+
+const fabricExpertise = [
+  'Lakehouse',
+  'Warehouse',
+  'OneLake',
+  'PySpark',
+  'Spark Notebooks',
+  'Pipelines',
+  'Power BI',
+  'Semantic Models',
+  'Data Integration',
+  'Data Engineering',
+  'Mirroring',
+  'SQL Analytics Endpoint',
+];
+
+const enterpriseTechnologies = ['Azure', 'SQL Server', 'Networking', 'Storage', 'DevOps', 'Cloud Infrastructure', 'Enterprise Support'];
 
 const About: React.FC = () => {
   return (
@@ -71,7 +146,7 @@ const About: React.FC = () => {
           viewport={{ once: true, amount: 0.1 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">
+          <h2 className="text-3xl md:text-6xl font-extrabold mb-8 tracking-tight">
             About <span className="text-blue-500">Me</span>
           </h2>
           <p className="text-gray-400 max-w-4xl mx-auto text-xl md:text-2xl font-light">
@@ -95,7 +170,7 @@ const About: React.FC = () => {
             <div className="text-left w-full max-w-xs sm:max-w-none">
               <h3 className="text-2xl font-bold text-white mb-3">Abdul Rafi</h3>
               <p className="text-blue-400 font-semibold text-lg mb-4">
-                Software Trainee | Full-Stack Developer
+                Software Engineer 
               </p>
               <p className="text-gray-300 mb-6">
                 Passionate technologist specializing in <strong>cloud infrastructure</strong>, <strong>database management</strong>, and <strong>full-stack development</strong>. Currently mastering enterprise technologies to build robust, scalable applications.
@@ -176,61 +251,116 @@ const About: React.FC = () => {
                     </div>
                   </div>
                   
-                  {/* Quadrant Technologies */}
-                  <div className="flex items-start gap-3 mb-6">
-                    <div className="mt-1">
-                      <CloudLightning className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-blue-300 mb-1">Software Engineer at Quadrant Technologies</h4>
-                      <p className="text-gray-300 text-sm">
-                        Currently mastering <strong>SQL Server</strong>, <strong>Azure Ecosystem</strong>, <strong>Networking</strong>, 
-                        <strong> DevOps Administration</strong>, and <strong>Storage solutions</strong>. Actively expanding technical domain 
-                        knowledge in enterprise cloud infrastructure and database management.
-                      </p>
+                  {/* Career Timeline */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-blue-300 mb-5 flex items-center gap-2">
+                      <GitBranch className="w-4 h-4" /> Career Timeline
+                    </h4>
+
+                    <div className="relative pl-7">
+                      {/* connecting vertical line with a subtle blue glow */}
+                      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-blue-500 via-blue-600/40 to-blue-500/70 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+
+                      {/* Node 1 — Joined as Trainee */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="relative pb-8"
+                      >
+                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
+                          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500/50 blur-[3px]" />
+                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
+                        </span>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">December 2025</p>
+                        <h5 className="font-bold text-white mt-0.5">
+                          Joined Quadrant Technologies as Software Engineer Trainee
+                        </h5>
+                        <p className="text-sm text-gray-400 mt-2">
+                          Completed enterprise-grade training across:
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {traineeTraining.map((item, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2.5 py-1 text-[11px] bg-gray-800 rounded-full border border-gray-700 text-gray-300 font-medium"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+
+                      {/* Node 2 — Promoted, current role */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        viewport={{ once: true }}
+                        className="relative"
+                      >
+                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400/60" />
+                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-400 ring-4 ring-blue-400/25" />
+                        </span>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">
+                          July 2026 – Present
+                        </p>
+                        <h5 className="font-bold text-white mt-0.5 flex items-center gap-2">
+                          Promoted to Software Engineer
+                          <TrendingUp className="w-4 h-4 text-green-400" />
+                        </h5>
+                        <p className="text-sm text-gray-300 mt-2">
+                          Currently working on Microsoft's Data &amp; Analytics ecosystem while supporting
+                          enterprise Microsoft Fabric customers.
+                        </p>
+                      </motion.div>
                     </div>
                   </div>
-                  
-                  {/* Core Focus Areas & Technical Growth */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-800">
+
+                  {/* Current Responsibilities */}
+                  <div className="mt-6 pt-6 border-t border-gray-800">
+                    <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                      <Terminal className="w-4 h-4" /> Current Responsibilities
+                    </h5>
+     <p className="text-sm text-gray-300 leading-relaxed">
+  As a Software Engineer, I work with enterprise <strong>Microsoft Fabric</strong> technologies, including <strong>Lakehouse</strong>, <strong>Data Warehouse</strong>, <strong>OneLake</strong>, <strong>PySpark</strong>, <strong>Data Pipelines</strong>, <strong>Semantic Models</strong>, and <strong>Power BI</strong>, delivering scalable data engineering and analytics solutions.
+</p>
+                  </div>
+
+                  {/* Microsoft Fabric Expertise & Enterprise Technologies */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-gray-800">
                     <div>
-                      <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                        <DatabaseZap className="w-4 h-4" /> Core Focus Areas
+                      <h5 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                        <Layers className="w-4 h-4" /> Microsoft Fabric Expertise
                       </h5>
-                      <ul className="text-sm text-gray-400 space-y-1">
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                          SQL Server Administration
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                          Azure Cloud Services
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                          Network Infrastructure
-                        </li>
-                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {fabricExpertise.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1.5 text-xs font-medium bg-blue-950/40 rounded-lg border border-blue-800/40 text-blue-200 hover:border-blue-500 hover:bg-blue-900/40 transition-colors cursor-default"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    
+
                     <div>
-                      <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                        <Terminal className="w-4 h-4" /> Technical Growth
+                      <h5 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                        <DatabaseZap className="w-4 h-4" /> Enterprise Technologies
                       </h5>
-                      <ul className="text-sm text-gray-400 space-y-1">
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                          DevOps & CI/CD Practices
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                          Storage Solutions
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                          Enterprise Deployment
-                        </li>
-                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {enterpriseTechnologies.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1.5 text-xs font-medium bg-gray-800 rounded-lg border border-gray-700 text-gray-300 hover:border-blue-500 hover:bg-blue-900/20 transition-colors cursor-default"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

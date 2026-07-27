@@ -41,13 +41,13 @@ const Projects = () => {
 tech: ["ASP.NET Core", "React", "SQL Server", "JWT"," Entity Framework","tailwinds CSS","Restful APIs","C#","JavaScript","SignalR","LINQ","HTML","CSS",".NET-8"],
   icon: <Users className="w-5 h-5 text-blue-400" />,
   github: "#https://github.com/rafiabdul143/SkillNet",
-  live: "#",
+  live:"https://sk-black.vercel.app/",
   status: "ongoing",
   image: skillnet,
 },
  
-    {
-slug: "resumeforge",
+{
+slug:"resumeforge",
 
 title: "ResumeForge",
 
@@ -69,7 +69,7 @@ icon: <Users className="w-5 h-5 text-blue-400" />,
 
 github: "https://github.com/rafiabdul143/ATSFreeResumeMaker",
 
-live: "https://your-vercel-link.vercel.app",
+live: "https://atsfreeresumemaker.vercel.app/",
 
 status: "ongoing",
 
@@ -102,12 +102,12 @@ image: resumeForge,
   ],
   icon: <Globe className="w-5 h-5 text-blue-400" />,
   github: "https://github.com/rafiabdul143/Civil-University-1",
-  live: "https://civil-university-1-ia5943v0v-rafiabdul143s-projects.vercel.app/",
-  status: "completed",
+live: "https://buniyaadec.com",
+  status: "ongoing",
   image: buniyaadec,
 },
 {
-  slug: "stocks-prediction-system",
+  slug: "Stocks-prediction-system",
   title: "Stocks Prediction System",
   description:
     "Professional AI-powered stock market prediction system that leverages machine learning models to forecast share price trends with interactive real-time data visualization. Deployed on AWS using EC2, S3, and integrated ML services for scalability and performance.",
@@ -264,7 +264,7 @@ image: resumeForge,
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
+          <h2 className="text-3xl md:text-4xl mt-10 font-bold text-white">
             Featured <span className="text-blue-400">Projects</span>
           </h2>
           <p className="text-sm md:text-base text-gray-400 mt-3 max-w-2xl mx-auto">
@@ -353,30 +353,7 @@ image: resumeForge,
         ))}
       </div>
 
-      {/* Buttons */}
-      <div className="flex gap-2 mt-3">
-        <a
-          href={project.github}
-          onClick={(e) => e.stopPropagation()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1 px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-all"
-        >
-          <Github className="w-3.5 h-3.5" />
-          Code
-        </a>
-
-        <a
-          href={project.live}
-          onClick={(e) => e.stopPropagation()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1 px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          Demo
-        </a>
-      </div>
+   
     </div>
   </motion.div>
 ))}

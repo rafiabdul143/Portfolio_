@@ -11,7 +11,7 @@ const Footer = () => {
     },
     {
       icon: <Linkedin className="w-5 h-5" />,
-      href: 'https://www.linkedin.com/in/rafiabdul143',
+      href: 'https://linkedin.com/in/abdulrafi0870',
       label: 'LinkedIn',
     },
     {

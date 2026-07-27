@@ -4,24 +4,36 @@ import { Download, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import resume from "../assets/Resume.pdf";
 
+const MicrosoftLogo = () => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 23 23"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="shrink-0"
+  >
+    <rect x="0" y="0" width="10.81" height="10.81" fill="#F25022" />
+    <rect x="12.19" y="0" width="10.81" height="10.81" fill="#7FBA00" />
+    <rect x="0" y="12.19" width="10.81" height="10.81" fill="#00A4EF" />
+    <rect x="12.19" y="12.19" width="10.81" height="10.81" fill="#FFB900" />
+  </svg>
+);
+
 const Hero = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };
-const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const titles = [
-    "Microsoft Certified",
+    "Microsoft Certified Professional",
+    "Software Engineer",
     "Full-Stack Developer",
-    ".NET Developer",
-    "Fabric Expert",
-    "Desktop Developer",
-    "IoT Enthusiast",
-    "UI/UX Designer",
+    "Microsoft Fabric Engineer",
+    "DevOps Engineer",
+    "AI Enthusiast",
   ];
-
-
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -42,15 +54,13 @@ const navigate = useNavigate();
         <div className="absolute inset-0 bg-gradient-to-b from-[#1f2c4f] via-[#01081e] to-black opacity-90"></div>
 
         {/* Subtle moving grid */}
-{/* Subtle moving grid */}
-<div className="absolute inset-0
-  bg-[linear-gradient(90deg,#111 2px,transparent 2px),
-      linear-gradient(#111 2px,transparent 2px)]
-  bg-[size:80px_80px]
-  animate-[background-position_30s_linear_infinite]">
-</div>
-
-</div>
+        <div className="absolute inset-0
+          bg-[linear-gradient(90deg,#111_2px,transparent_2px),
+              linear-gradient(#111_2px,transparent_2px)]
+          bg-[size:80px_80px]
+          animate-[background-position_30s_linear_infinite]">
+        </div>
+      </div>
 
       {/* ==== Content ==== */}
       <div className="container mx-auto px-6 relative z-10 text-center">
@@ -77,9 +87,10 @@ const navigate = useNavigate();
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.8 }}
-              className="absolute text-[#3a6fa5] px-2 whitespace-nowrap"
+              className="absolute text-[#3a6fa5] px-2 whitespace-nowrap inline-flex items-center gap-2"
             >
-              {titles[currentIndex]}
+              {currentIndex === 0 && <MicrosoftLogo />}
+              <span>{titles[currentIndex]}</span>
             </motion.span>
           </AnimatePresence>
         </div>
@@ -100,29 +111,26 @@ const navigate = useNavigate();
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2 }}
           className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full"
-        ><a
-  href={resume}
-  download="Rafi_Resume.pdf"
-  className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-gradient-to-r from-[#1f4e7a] to-[#3a6fa5] text-white hover:from-[#3a6fa5] hover:to-[#1f4e7a] transition-all duration-300 font-semibold shadow-md shadow-[#3a6fa533]"
->
-  <Download className="w-5 h-5" />
-  Download Resume
-</a>
+        >
+          <a
+            href={resume}
+            download="Rafi_Resume.pdf"
+            className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-gradient-to-r from-[#1f4e7a] to-[#3a6fa5] text-white hover:from-[#3a6fa5] hover:to-[#1f4e7a] transition-all duration-300 font-semibold shadow-md shadow-[#3a6fa533]"
+          >
+            <Download className="w-5 h-5" />
+            Download Resume
+          </a>
 
-
-       
-    <button
-  onClick={() => navigate("/projects")} // route of your Projects page
-  className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-[#3a6fa5] text-[#3a6fa5] hover:bg-[#3a6fa5] hover:text-black transition-all duration-300 font-semibold shadow-md"
->
-  View Projects
-</button>
-
-
+          <button
+            onClick={() => navigate("/projects")}
+            className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-[#3a6fa5] text-[#3a6fa5] hover:bg-[#3a6fa5] hover:text-black transition-all duration-300 font-semibold shadow-md"
+          >
+            View Projects
+          </button>
         </motion.div>
 
         {/* Scroll Indicator */}
-     
+
       </div>
 
       {/* Tailwind animation for gradient text */}

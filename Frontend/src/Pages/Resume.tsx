@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Phone, Download, Server, Cloud, Database, Network, Terminal } from "lucide-react";
-import resume from "../assets/Resume.pdf"; // Ensure your Resume.pdf is in the correct path
+import { Github, Linkedin, Mail, Phone, Download, Server, Cloud, Database, Network, Terminal, BadgeCheck } from "lucide-react";
+import resume from "../assets/Abdul Rafi.pdf"; // Ensure your Resume.pdf is in the correct path
 
 const Resume = () => {
   return (
@@ -20,15 +20,19 @@ const Resume = () => {
             ABDUL RAFI
           </h1>
           <p className="text-blue-400 text-lg font-medium mb-4">
-            Software Trainee | Full-Stack Developer | Cloud Enthusiast
+            Software Engineer
           </p>
           <div className="flex justify-center gap-6 text-blue-400">
             <a href="https://github.com/rafiabdul143" target="_blank" rel="noopener noreferrer">
               <Github className="w-6 h-6 hover:text-blue-500 transition-colors" />
             </a>
-            <a href="https://www.linkedin.com/in/mohd-abdul-rafi-17" target="_blank" rel="noopener noreferrer">
-              <Linkedin className="w-6 h-6 hover:text-blue-500 transition-colors" />
-            </a>
+          <a
+  href="https://www.linkedin.com/in/abdulrafi0870/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Linkedin className="w-6 h-6 cursor-pointer hover:text-blue-500 transition-colors" />
+</a>
             <a href="mailto:mohdabdulrafi17@gmail.com">
               <Mail className="w-6 h-6 hover:text-blue-500 transition-colors" />
             </a>
@@ -46,14 +50,10 @@ const Resume = () => {
           viewport={{ once: true }}
           className="bg-gray-900/50 border border-blue-500 rounded-lg p-6 mb-10"
         >
-          <h2 className="text-xl font-semibold text-blue-400 mb-2">Objective</h2>
-          <p className="text-gray-300 leading-relaxed">
-            Passionate Software Trainee and Computer Science Engineering (CSE–IoT) graduate with hands-on experience in 
-            <strong> Azure cloud ecosystem, SQL Server administration, networking, DevOps practices,</strong> and full-stack development. 
-            Currently expanding expertise in enterprise cloud infrastructure while actively working on scalable web applications 
-            and IoT-based systems. Seeking to leverage cloud technologies and development skills to contribute to innovative 
-            technology solutions.
-          </p>
+          <h2 className="text-xl font-semibold text-blue-400 mb-2">Professional Summary</h2>
+       <p className="text-gray-300 leading-relaxed">
+  Software Engineer specializing in building scalable enterprise applications, modern data platforms, and cloud-native solutions using <strong>Microsoft Fabric, Microsoft Azure, ASP.NET Core, React, TypeScript, C#, Python, and SQL Server</strong>. Experienced in designing and implementing end-to-end data engineering solutions with <strong>Lakehouse, Data Warehouse, OneLake, PySpark, Data Pipelines, Semantic Models, and Power BI</strong> to transform complex business requirements into reliable, data-driven solutions. Proficient in applying <strong>DevOps practices, CI/CD automation, GitHub Actions, Azure DevOps, Docker, and cloud deployment strategies</strong> to streamline software delivery and improve development efficiency. Microsoft Certified across <strong>Azure Administration, Microsoft Fabric, Azure DevOps, SQL Development, and GitHub technologies</strong>, with a strong passion for software engineering, scalable system design, modern web development, and continuous learning.
+</p>
         </motion.div>
 
         {/* ==== Professional Experience ==== */}
@@ -65,8 +65,8 @@ const Resume = () => {
           className="bg-gray-900/50 border border-blue-500 rounded-lg p-6 mb-10"
         >
           <h2 className="text-xl font-semibold text-blue-400 mb-4">Professional Experience</h2>
-          
-          {/* Software Trainee Experience */}
+
+          {/* Software Engineer Experience */}
           <div className="mb-6 pb-6 border-b border-gray-700 last:border-0">
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white flex-shrink-0 mt-1">
@@ -74,7 +74,7 @@ const Resume = () => {
               </div>
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <h3 className="font-semibold text-white text-lg">Software Trainee</h3>
+                  <h3 className="font-semibold text-white text-lg">Software Engineer</h3>
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded-full border border-blue-700/50">
                       Currently Working
@@ -86,33 +86,46 @@ const Resume = () => {
                   </div>
                 </div>
                 <p className="text-blue-300 text-sm font-medium">Quadrant Technologies</p>
-                <p className="text-gray-400 text-sm mt-1">Present</p>
+                <p className="text-gray-400 text-sm mt-1">Dec 2025 – Present</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
                 <h4 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                  <Cloud className="w-4 h-4" /> Cloud & Infrastructure
+                  <Cloud className="w-4 h-4" /> Cloud & Data Engineering
                 </h4>
                 <ul className="text-sm text-gray-300 space-y-1 ml-5 list-disc">
-                  <li>Mastering <strong>Azure ecosystem</strong> and cloud service fundamentals</li>
-                  <li>Learning <strong>networking principles</strong> including DNS resolution and storage solutions</li>
-                  <li>Understanding enterprise cloud infrastructure and deployment strategies</li>
+                  <li>Built and maintained ETL/ELT pipelines in <strong>Microsoft Fabric</strong> for ingesting, transforming, and loading data from multiple enterprise sources</li>
+                  <li>Developed reusable data pipelines and transformation logic to improve data quality and deliver analytics-ready datasets for business reporting</li>
+                  <li>Worked with <strong>Microsoft Azure</strong> services including Virtual Machines, Storage Accounts, and Microsoft Entra ID to support cloud-based data solutions</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h4 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                  <Database className="w-4 h-4" /> Development & Operations
+                  <Database className="w-4 h-4" /> DevOps & Development
                 </h4>
                 <ul className="text-sm text-gray-300 space-y-1 ml-5 list-disc">
-                  <li>Gaining hands-on experience with <strong>SQL Server administration</strong></li>
-                  <li>Learning <strong>DevOps practices</strong> and Git administration workflows</li>
-                  <li>Expanding technical domain knowledge in enterprise application deployment</li>
+                  <li>Supported <strong>CI/CD processes</strong> using Azure DevOps, assisting with deployment pipelines, source control, and release activities</li>
+                  <li>Optimized <strong>SQL Server queries</strong> for data validation, troubleshooting, and performance improvements across production workloads</li>
+                  <li>Monitored pipeline executions, investigated failures, and collaborated with the team to resolve production issues within agreed timelines</li>
                 </ul>
               </div>
             </div>
+          </div>
+
+          {/* C# Developer Intern Experience */}
+          <div className="mb-6 pb-6 border-b border-gray-700 last:border-0">
+            <h3 className="font-semibold text-white">Remote Intern – C# Developer</h3>
+            <p className="text-blue-300 text-sm">Shalsys Software Solutions Pvt. Ltd.</p>
+            <p className="text-gray-400 text-sm">Jun 2025 – Oct 2025</p>
+            <ul className="list-disc ml-5 mt-2 text-gray-300 space-y-1">
+              <li>Contributed to the development and enhancement of Windows-based applications using C#, gaining hands-on experience with enterprise application development and object-oriented programming</li>
+              <li>Developed and optimized SQL Server queries to support application functionality, data retrieval, and reporting requirements</li>
+              <li>Worked with ASP.NET Core MVC to understand controller-based architecture, application flow, and backend development practices</li>
+              <li>Assisted in debugging application issues, validating implemented features, and performing functional testing to ensure reliable application behavior</li>
+            </ul>
           </div>
 
           {/* Data Science Intern Experience */}
@@ -121,9 +134,9 @@ const Resume = () => {
             <p className="text-blue-300 text-sm">NIT Trichy</p>
             <p className="text-gray-400 text-sm">June 2024 – July 2024</p>
             <ul className="list-disc ml-5 mt-2 text-gray-300 space-y-1">
-              <li>Completed an intensive Data Science internship, gaining hands-on experience with Python and data analysis</li>
-              <li>Worked on diverse datasets, utilizing Python libraries for analysis and visualization</li>
-              <li>Participated in team discussions and peer reviews, enhancing collaborative skills</li>
+              <li>Completed an intensive internship focused on Python programming, applying data analysis techniques to extract meaningful insights from structured datasets</li>
+              <li>Worked with Python libraries such as Pandas, NumPy, and Matplotlib to clean, analyze, and visualize data for exploratory analysis and reporting</li>
+              <li>Collaborated with mentors and peers on practical assignments, strengthening problem-solving, technical communication, and teamwork</li>
             </ul>
           </div>
         </motion.div>
@@ -161,40 +174,83 @@ const Resume = () => {
           className="bg-gray-900/50 border border-blue-500 rounded-lg p-6 mb-10"
         >
           <h2 className="text-xl font-semibold text-blue-400 mb-4">Technical Skills</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-gray-300">
-            <div>
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <Cloud className="w-4 h-4" /> Cloud & DevOps
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Cloud className="w-4 h-4 text-blue-400" /> Cloud Platforms & DevOps
               </h3>
-              <p>Azure Ecosystem, Cloud Fundamentals, AWS (S3, EC2), Networking & Storage, DNS Resolution, DevOps Administration, CI/CD, Docker</p>
+              <div className="flex flex-wrap gap-2">
+                {["Microsoft Azure", "Microsoft Entra ID", "AWS (EC2, S3)", "GCP (Fundamentals)", "Azure DevOps", "Git", "GitHub", "GitHub Actions", "CI/CD", "Docker", "Kubernetes"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <Database className="w-4 h-4" /> Databases
+
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Database className="w-4 h-4 text-blue-400" /> Databases
               </h3>
-              <p>SQL Server, MongoDB, MySQL, Database Administration</p>
+              <div className="flex flex-wrap gap-2">
+                {["SQL Server", "MySQL", "MongoDB"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <Terminal className="w-4 h-4" /> Programming
+
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Terminal className="w-4 h-4 text-blue-400" /> Programming Languages
               </h3>
-              <p>Python, Java, JavaScript, C/C++, HTML, CSS, SQL</p>
+              <div className="flex flex-wrap gap-2">
+                {["C#", "Python", "SQL", "Java", "JavaScript"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <Server className="w-4 h-4" /> Full-Stack
+
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Server className="w-4 h-4 text-blue-400" /> Frameworks & Web Technologies
               </h3>
-              <p>MERN Stack (MongoDB, Express, React.js, Node.js), ASP.NET Core, REST APIs</p>
+              <div className="flex flex-wrap gap-2">
+                {["ASP.NET Core MVC", "HTML5", "RESTful APIs", "React.js", "Node.js", "Express.js", "TailwindCSS"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <Network className="w-4 h-4" /> IoT & Tools
+
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Network className="w-4 h-4 text-blue-400" /> Data Engineering & Analytics
               </h3>
-              <p>Microcontrollers, MQTT, Sensor Integration, Git, GitHub, VS Code, Cisco Packet Tracer</p>
+              <div className="flex flex-wrap gap-2">
+                {["Microsoft Fabric", "Power BI", "Data Warehousing", "Data Modeling", "ETL/ELT Pipelines"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white mb-2">Frameworks & Libraries</h3>
-              <p>React, Streamlit, TensorFlow, Keras, OpenCV, TailwindCSS</p>
+
+            <div className="bg-black/20 border border-blue-800/40 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2 text-sm">
+                <Server className="w-4 h-4 text-blue-400" /> Software Engineering
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {["SDLC", "Debugging", "Application Development", "Problem Solving", "Agile Methodologies"].map((skill) => (
+                  <span key={skill} className="text-xs bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full border border-blue-700/40">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
@@ -210,16 +266,13 @@ const Resume = () => {
           <h2 className="text-xl font-semibold text-blue-400 mb-4">Projects</h2>
           <ul className="list-disc ml-5 text-gray-300 space-y-4">
             <li>
-              <span className="font-semibold text-white">Image Weapon Detection System:</span> Developed an AI-based system using Python and OpenCV to detect weapons in images. Implemented real-time object detection and classification using pre-trained models to enhance security monitoring.
+              <span className="font-semibold text-white">Face Recognition Attendance System:</span> Developed a full-stack desktop application using Python, OpenCV, and Tkinter. Implemented face detection using Haar Cascade and recognition using the LBPH algorithm. Designed a CSV-based data storage system for maintaining attendance records, with an intuitive GUI for real-time recognition and attendance marking.
             </li>
             <li>
-              <span className="font-semibold text-white">Face Recognition Attendance System:</span> Built a desktop application using Python, OpenCV, and Tkinter. Integrated Haarcascade and deep learning models for accurate face recognition. Maintained attendance logs in CSV files and implemented a GUI dashboard for user-friendly management.
+              <span className="font-semibold text-white">Smart Irrigation System (IoT):</span> Designed an IoT-based smart irrigation system using Arduino Uno, moisture sensors, and relay modules. Automated irrigation based on real-time soil moisture levels to reduce manual intervention and optimize water usage, gaining hands-on experience in hardware–software integration.
             </li>
             <li>
-              <span className="font-semibold text-white">Sparkle E-Commerce Website:</span> Developed a full-stack e-commerce platform using MERN stack with user authentication, shopping cart, and responsive UI. Implemented RESTful APIs, Redux state management, and deployed on a cloud platform to showcase end-to-end web development skills.
-            </li>
-            <li>
-              <span className="font-semibold text-white">Smart Irrigation System:</span> Designed an IoT-based smart irrigation system using Arduino Uno, moisture sensors, servo motors, and relay modules. Automated watering schedule based on soil moisture level, reducing water wastage and increasing agricultural efficiency. Integrated with an LCD for real-time status display.
+              <span className="font-semibold text-white">Personal Portfolio Website:</span> Developed a responsive portfolio website using React.js, Vite, and Tailwind CSS to showcase projects, certifications, and technical skills. Built a CI/CD pipeline using GitHub Actions and deployed on Vercel with seamless integration to GitHub for continuous deployment, applying reusable component architecture and Git-based version control.
             </li>
           </ul>
         </motion.div>
@@ -234,14 +287,49 @@ const Resume = () => {
         >
           <h2 className="text-xl font-semibold text-blue-400 mb-4">Certifications</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
-              <h3 className="font-semibold text-white mb-1">Data Science Internship</h3>
-              <p className="text-blue-300 text-sm">NIT Trichy</p>
-            </div>
-            <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
-              <h3 className="font-semibold text-white mb-1">Cloud Computing</h3>
-              <p className="text-blue-300 text-sm">AWS Educate & Google Cloud Skill Boost</p>
-            </div>
+            {[
+              { name: "DevOps Engineer Expert (AZ-400)", org: "Microsoft", category: "Microsoft Certified" },
+              { name: "Azure Administrator Associate (AZ-104)", org: "Microsoft", category: "Microsoft Certified" },
+              { name: "GitHub Actions (GH-200)", org: "Microsoft", category: "Microsoft Certified" },
+              { name: "Fabric Analytics Engineer Associate (Dp-600)", org: "Microsoft", category: "Microsoft Certified" },
+              { name: "Fabric Data Engineer Associate (DP-700)", org: "Microsoft", category: "Microsoft Certified" },
+                            { name: "SQL AI Developer Associate (DP-800)", org: "Microsoft", category: "Microsoft Certified" },
+              { name: "Data Science Internship", org: "NIT Trichy",category: "NIT Trichy Certified"},
+              { name: "Cloud Computing", org: "AWS Educate & Google Cloud Skill Boost",category:"GCP & AWS"},
+            ].map((cert) => {
+              const isMicrosoft = cert.category === "Microsoft Certified";
+              return (
+                <div
+                  key={cert.name}
+                  className={`flex items-start gap-3 rounded-lg p-4 border ${
+                    isMicrosoft
+                      ? "bg-blue-900/25 border-blue-500/50"
+                      : "bg-blue-900/10 border-blue-700/30"
+                  }`}
+                >
+                  <div
+                    className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border ${
+                      isMicrosoft
+                        ? "border-blue-400/60 bg-blue-500/20 text-blue-300"
+                        : "border-blue-700/40 bg-blue-900/30 text-blue-400"
+                    }`}
+                  >
+                    <BadgeCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span
+                      className={`inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 ${
+                        isMicrosoft ? "bg-blue-500/25 text-blue-300" : "bg-blue-900/40 text-blue-400"
+                      }`}
+                    >
+                      {cert.category}
+                    </span>
+                    <h3 className="font-semibold text-white text-sm leading-snug">{cert.name}</h3>
+                    <p className="text-blue-300 text-xs mt-1">{cert.org}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </motion.div>
 
@@ -257,7 +345,7 @@ const Resume = () => {
           <p className="text-gray-300">
             I hereby declare that the above information is true to the best of my knowledge and belief.
           </p>
-       
+
         </motion.div>
 
         {/* ==== Download Resume Button ==== */}

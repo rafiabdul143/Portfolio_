@@ -8,6 +8,7 @@ import python from "../assets/python.png";
 import smart from "../assets/smarte.jpg";
 import covid from "../assets/covid.png";
 import weapon from "../assets/weopon.png";
+import resumeForge from "../assets/resumeForge.png"
 
 export const projects = [
  {
@@ -33,7 +34,7 @@ export const projects = [
 
   github: "https://github.com/rafiabdul143/SkillNet",
 
-  live: "https://abdulrafi.vercel.app",
+  live: "https://sk-black.vercel.app/",
 
   status: "ongoing",
 
@@ -120,7 +121,49 @@ export const projects = [
       "Rule-based Logic"
     ]
   },
+{
+  slug: "resumeforge",
 
+  title: "ResumeForge",
+
+  shortDescription:
+    "AI-powered ATS Resume Builder for creating professional resumes.",
+
+  longDescription:
+    "ResumeForge is an AI-powered ATS Resume Builder that enables users to create recruiter-friendly resumes with real-time preview, modern templates, PDF export, and ATS optimization. Built with React and Vite, it provides a fast, responsive, and intuitive experience while allowing users to customize resumes and generate professional PDFs suitable for job applications.",
+
+  image: resumeForge,
+
+  github:
+    "https://github.com/rafiabdul143/ATSFreeResumeMaker",
+
+  live:
+    "https://atsfreeresumemaker.vercel.app/",
+
+  status: "ongoing",
+
+  tech: [
+    "React",
+    "Vite",
+    "JavaScript",
+    "Tailwind CSS",
+    "HTML5",
+    "CSS3",
+    "PDF Export",
+    "Local Storage"
+  ],
+
+  features: [
+    "ATS-Friendly Resume Builder",
+    "Real-Time Resume Preview",
+    "Multiple Modern Resume Templates",
+    "PDF Export",
+    "Responsive Design",
+    "Local Storage Persistence",
+    "Fast Vite Development Environment",
+    "Professional UI with Tailwind CSS"
+  ]
+},
   {
     slug: "buniyaadec-civil-career-guidance",
     title: "Buniyaadec Civil Career Guidance Platform",
@@ -137,7 +180,7 @@ export const projects = [
       "https://github.com/rafiabdul143/Civil-University-1",
 
     live:
-      "https://civil-university-1-ia5943v0v-rafiabdul143s-projects.vercel.app/",
+      "https://buniyaadec.com",
 
     status: "completed",
 
@@ -158,7 +201,7 @@ export const projects = [
   },
 
   {
-    slug: "stocks-prediction-system",
+    slug: "stocks-predictionsystem",
     title: "Stocks Prediction System",
 
     shortDescription:
