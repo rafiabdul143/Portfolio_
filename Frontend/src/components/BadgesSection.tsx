@@ -205,45 +205,48 @@ SectionEyebrow.displayName = "SectionEyebrow";
 //     the underlying credential link from opening accidentally.
 //   - Both: respects prefers-reduced-motion by disabling autoplay.
 // ============================================================
+// ============================================================
+// TIER 1 — SPOTLIGHT HERO (MOBILE SWIPE OPTIMIZED)
+// ============================================================
 const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
   const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  const [index, setIndex] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
+  const [index, setIndex] = useState<number>(0);
+  const [direction, setDirection] = useState<number>(0);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  // Guards against the synthetic "click" some mobile browsers fire
-  // right after a touch-drag ends, which would otherwise open the
-  // credential link mid-swipe.
-  const justDraggedRef = useRef(false);
+  const justDraggedRef = useRef<boolean>(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const itemCount = items.length;
   const badge = items[index] ?? items[0];
+
+  const go = useCallback(
+    (dir: 1 | -1) => {
+      setDirection(dir);
+      setIndex((prev) => (prev + dir + itemCount) % itemCount);
+    },
+    [itemCount]
+  );
 
   const isAutoplayActive = useMemo(
     () => itemCount > 1 && !isHovering && !isDragging && !prefersReducedMotion,
     [itemCount, isHovering, isDragging, prefersReducedMotion]
   );
 
-  const go = useCallback(
-    (direction: 1 | -1) => {
-      setIndex((prev) => (prev + direction + itemCount) % itemCount);
-    },
-    [itemCount]
-  );
-
-  // Autoplay loop — only ever active when isAutoplayActive is true.
+  // Autoplay loop
   useEffect(() => {
     if (!isAutoplayActive) return;
     timerRef.current = setInterval(() => {
-      setIndex((prev) => (prev + 1) % itemCount);
+      go(1);
     }, SPOTLIGHT_INTERVAL_MS);
+
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isAutoplayActive, itemCount]);
+  }, [isAutoplayActive, go]);
 
   const handleMouseEnter = useCallback(() => setIsHovering(true), []);
   const handleMouseLeave = useCallback(() => setIsHovering(false), []);
@@ -253,14 +256,25 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
     setIsDragging(true);
   }, []);
 
+  // Professional Drag & Velocity Handling
   const handleDragEnd = useCallback(
     (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
       setIsDragging(false);
-      if (info.offset.x < -SWIPE_THRESHOLD_PX) {
-        go(1);
-      } else if (info.offset.x > SWIPE_THRESHOLD_PX) {
-        go(-1);
+
+      const offset = info.offset.x;
+      const velocity = info.velocity.x;
+
+      // Trigger swipe if user dragged far enough OR flicked quickly
+      const isSwipe = Math.abs(offset) > SWIPE_THRESHOLD_PX || Math.abs(velocity) > 500;
+
+      if (isSwipe) {
+        if (offset < 0 || velocity < -500) {
+          go(1); // Swipe left -> Next
+        } else if (offset > 0 || velocity > 500) {
+          go(-1); // Swipe right -> Previous
+        }
       }
+
       window.setTimeout(() => {
         justDraggedRef.current = false;
       }, POST_DRAG_CLICK_GUARD_MS);
@@ -268,11 +282,10 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
     [go]
   );
 
-  // Swallows the click that follows a drag so the credential link
-  // doesn't open while (or right after) the user is swiping.
   const guardLinkClick = useCallback((event: React.MouseEvent) => {
     if (justDraggedRef.current) {
       event.preventDefault();
+      event.stopPropagation();
     }
   }, []);
 
@@ -295,6 +308,21 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
 
   if (itemCount === 0) return null;
 
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir < 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+  };
+
   return (
     <div className="mb-24">
       <SectionEyebrow
@@ -312,30 +340,30 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
         aria-label="Flagship credential spotlight"
         tabIndex={0}
       >
-        {/* Rotating conic-gradient halo — the section's signature element */}
         <div className="spotlight-halo pointer-events-none absolute -inset-[2px] rounded-[32px] opacity-70" />
         <div className="pointer-events-none absolute -inset-16 -z-10 rounded-full bg-blue-600/20 blur-[100px]" />
 
         <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-gray-950 via-black to-gray-950 p-[2px]">
           <div className="relative overflow-hidden rounded-[28px] bg-black/90 backdrop-blur-2xl">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={badge.link + badge.name}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
                 drag={isMobile ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.12}
-                dragMomentum={false}
+                dragElastic={0.2}
                 dragDirectionLock
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
                 style={{ touchAction: "pan-y" }}
-                initial={{ opacity: 0, x: 60 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -60 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="flex select-none flex-col items-center gap-10 p-10 md:flex-row md:p-16"
+                className="flex select-none flex-col items-center gap-10 p-8 md:flex-row md:p-16"
               >
-                {/* Image with pulsing glow */}
+                {/* Badge Image */}
                 <a
                   href={badge.link}
                   target="_blank"
@@ -358,17 +386,13 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
                       src={badge.img}
                       alt={badge.name}
                       draggable={false}
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-contain pointer-events-none"
                     />
                   </motion.div>
                 </a>
 
-                {/* Copy */}
+                {/* Badge Information */}
                 <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
-                  <span className="mb-4 flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-300">
-                    <Star className="h-3.5 w-3.5" strokeWidth={2.5} />
-                    Flagship Credential
-                  </span>
                   <h3 className="mb-2 text-3xl font-bold leading-tight text-white md:text-5xl">
                     {badge.name.trim()}
                   </h3>
@@ -396,22 +420,22 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Arrows — desktop only */}
+            {/* Carousel Controls (Desktop) */}
             {itemCount > 1 && (
               <>
                 <button
                   type="button"
-                  aria-label="Previous flagship credential"
+                  aria-label="Previous credential"
                   onClick={handlePrev}
-                  className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   type="button"
-                  aria-label="Next flagship credential"
+                  aria-label="Next credential"
                   onClick={handleNext}
-                  className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -420,17 +444,19 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
           </div>
         </div>
 
-        {/* Dots + auto-advance progress */}
+        {/* Indicators */}
         {itemCount > 1 && (
           <div className="mt-6 flex items-center justify-center gap-2">
             {items.map((item, i) => (
               <button
                 key={item.link + item.name}
                 type="button"
-                aria-label={`Show flagship credential ${i + 1}: ${item.name}`}
-                aria-current={i === index}
-                onClick={() => setIndex(i)}
-                className="relative h-1.5 w-10 overflow-hidden rounded-full bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                aria-label={`Show credential ${i + 1}`}
+                onClick={() => {
+                  setDirection(i > index ? 1 : -1);
+                  setIndex(i);
+                }}
+                className="relative h-1.5 w-10 overflow-hidden rounded-full bg-white/10"
               >
                 {i === index && isAutoplayActive && (
                   <motion.span
@@ -452,6 +478,253 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
     </div>
   );
 };
+// const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
+//   const isMobile = useIsMobile();
+//   const prefersReducedMotion = usePrefersReducedMotion();
+
+//  const [[index, direction], setIndex] = useState([0, 0]);
+//   const [isHovering, setIsHovering] = useState(false);
+//   const [isDragging, setIsDragging] = useState(false);
+
+//   // Guards against the synthetic "click" some mobile browsers fire
+//   // right after a touch-drag ends, which would otherwise open the
+//   // credential link mid-swipe.
+//   const justDraggedRef = useRef(false);
+//   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+//   const itemCount = items.length;
+//   const badge = items[index] ?? items[0];
+
+//   const isAutoplayActive = useMemo(
+//     () => itemCount > 1 && !isHovering && !isDragging && !prefersReducedMotion,
+//     [itemCount, isHovering, isDragging, prefersReducedMotion]
+//   );
+
+//   const go = useCallback(
+//   (dir: 1 | -1) => {
+//     setIndex(([prev]) => [
+//       (prev + dir + itemCount) % itemCount,
+//       dir,
+//     ]);
+//   },
+//   [itemCount]
+// );
+
+//   // Autoplay loop — only ever active when isAutoplayActive is true.
+//   useEffect(() => {
+//     if (!isAutoplayActive) return;
+//     timerRef.current = setInterval(() => {
+//       setIndex((prev) => (prev + 1) % itemCount);
+//     }, SPOTLIGHT_INTERVAL_MS);
+//     return () => {
+//       if (timerRef.current) clearInterval(timerRef.current);
+//     };
+//   }, [isAutoplayActive, itemCount]);
+
+//   const handleMouseEnter = useCallback(() => setIsHovering(true), []);
+//   const handleMouseLeave = useCallback(() => setIsHovering(false), []);
+
+//   const handleDragStart = useCallback(() => {
+//     justDraggedRef.current = true;
+//     setIsDragging(true);
+//   }, []);
+
+//   const handleDragEnd = useCallback(
+//     (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+//       setIsDragging(false);
+//       if (info.offset.x < -SWIPE_THRESHOLD_PX) {
+//         go(1);
+//       } else if (info.offset.x > SWIPE_THRESHOLD_PX) {
+//         go(-1);
+//       }
+//       window.setTimeout(() => {
+//         justDraggedRef.current = false;
+//       }, POST_DRAG_CLICK_GUARD_MS);
+//     },
+//     [go]
+//   );
+
+//   // Swallows the click that follows a drag so the credential link
+//   // doesn't open while (or right after) the user is swiping.
+//   const guardLinkClick = useCallback((event: React.MouseEvent) => {
+//     if (justDraggedRef.current) {
+//       event.preventDefault();
+//     }
+//   }, []);
+
+//   const handlePrev = useCallback(() => go(-1), [go]);
+//   const handleNext = useCallback(() => go(1), [go]);
+
+//   const handleKeyDown = useCallback(
+//     (event: React.KeyboardEvent) => {
+//       if (itemCount < 2) return;
+//       if (event.key === "ArrowLeft") {
+//         event.preventDefault();
+//         go(-1);
+//       } else if (event.key === "ArrowRight") {
+//         event.preventDefault();
+//         go(1);
+//       }
+//     },
+//     [go, itemCount]
+//   );
+
+//   if (itemCount === 0) return null;
+
+//   return (
+//     <div className="mb-24">
+//       <SectionEyebrow
+//         label="Tier 1 · Flagship Achievements"
+//         description="The credentials that define my professional identity."
+//       />
+
+//       <div
+//         className="relative mx-auto max-w-5xl"
+//         onMouseEnter={handleMouseEnter}
+//         onMouseLeave={handleMouseLeave}
+//         onKeyDown={handleKeyDown}
+//         role="region"
+//         aria-roledescription="carousel"
+//         aria-label="Flagship credential spotlight"
+//         tabIndex={0}
+//       >
+//         {/* Rotating conic-gradient halo — the section's signature element */}
+//         <div className="spotlight-halo pointer-events-none absolute -inset-[2px] rounded-[32px] opacity-70" />
+//         <div className="pointer-events-none absolute -inset-16 -z-10 rounded-full bg-blue-600/20 blur-[100px]" />
+
+//         <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-gray-950 via-black to-gray-950 p-[2px]">
+//           <div className="relative overflow-hidden rounded-[28px] bg-black/90 backdrop-blur-2xl">
+//             <AnimatePresence mode="wait">
+//               <motion.div
+//                 key={badge.link + badge.name}
+//                 drag={isMobile ? "x" : false}
+//                 dragConstraints={{ left: 0, right: 0 }}
+//                 dragElastic={0.12}
+//                 dragMomentum={false}
+//                 dragDirectionLock
+//                 onDragStart={handleDragStart}
+//                 onDragEnd={handleDragEnd}
+//                 style={{ touchAction: "pan-y" }}
+//                 initial={{ opacity: 0, x: 60 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 exit={{ opacity: 0, x: -60 }}
+//                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+//                 className="flex select-none flex-col items-center gap-10 p-10 md:flex-row md:p-16"
+//               >
+//                 {/* Image with pulsing glow */}
+//                 <a
+//                   href={badge.link}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
+//                   onClick={guardLinkClick}
+//                   className="relative flex-shrink-0 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80"
+//                 >
+//                   <motion.div
+//                     animate={{ scale: [1, 1.03, 1] }}
+//                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+//                     className="absolute inset-0 rounded-3xl bg-blue-500/40 blur-3xl"
+//                   />
+//                   <motion.div
+//                     whileHover={{ scale: 1.06, rotate: 2 }}
+//                     transition={{ type: "spring", stiffness: 260, damping: 18 }}
+//                     className="relative flex h-48 w-48 items-center justify-center rounded-3xl border border-blue-500/30 bg-gradient-to-br from-gray-800 to-gray-950 p-7 shadow-[0_0_80px_-10px_rgba(59,130,246,0.6)] md:h-60 md:w-60"
+//                   >
+//                     <img
+//                       src={badge.img}
+//                       alt={badge.name}
+//                       draggable={false}
+//                       className="h-full w-full object-contain"
+//                     />
+//                   </motion.div>
+//                 </a>
+
+//                 {/* Copy */}
+//                 <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
+                 
+//                   <h3 className="mb-2 text-3xl font-bold leading-tight text-white md:text-5xl">
+//                     {badge.name.trim()}
+//                   </h3>
+//                   <p className="mb-3 text-lg font-medium text-gray-400">{badge.issuer.trim()}</p>
+//                   {badge.description && (
+//                     <p className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">{badge.description}</p>
+//                   )}
+
+//                   <div className="mb-8 flex items-center gap-2">
+//                     <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
+//                     <span className="text-sm font-medium text-green-400">Verified Credential</span>
+//                   </div>
+
+//                   <a
+//                     href={badge.link}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     onClick={guardLinkClick}
+//                     className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:bg-blue-500 hover:shadow-blue-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+//                   >
+//                     View Credential
+//                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+//                   </a>
+//                 </div>
+//               </motion.div>
+//             </AnimatePresence>
+
+//             {/* Arrows — desktop only */}
+//             {itemCount > 1 && (
+//               <>
+//                 <button
+//                   type="button"
+//                   aria-label="Previous flagship credential"
+//                   onClick={handlePrev}
+//                   className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+//                 >
+//                   <ChevronLeft className="h-5 w-5" />
+//                 </button>
+//                 <button
+//                   type="button"
+//                   aria-label="Next flagship credential"
+//                   onClick={handleNext}
+//                   className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+//                 >
+//                   <ChevronRight className="h-5 w-5" />
+//                 </button>
+//               </>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Dots + auto-advance progress */}
+//         {itemCount > 1 && (
+//           <div className="mt-6 flex items-center justify-center gap-2">
+//             {items.map((item, i) => (
+//               <button
+//                 key={item.link + item.name}
+//                 type="button"
+//                 aria-label={`Show flagship credential ${i + 1}: ${item.name}`}
+//                 aria-current={i === index}
+//                 onClick={() => setIndex(i)}
+//                 className="relative h-1.5 w-10 overflow-hidden rounded-full bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+//               >
+//                 {i === index && isAutoplayActive && (
+//                   <motion.span
+//                     key={`${index}-progress`}
+//                     initial={{ width: "0%" }}
+//                     animate={{ width: "100%" }}
+//                     transition={{ duration: SPOTLIGHT_INTERVAL_MS / 1000, ease: "linear" }}
+//                     className="absolute inset-y-0 left-0 rounded-full bg-blue-400"
+//                   />
+//                 )}
+//                 {i === index && !isAutoplayActive && (
+//                   <span className="absolute inset-0 rounded-full bg-blue-400" />
+//                 )}
+//               </button>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
 // ============================================================
 // TIER 2 / TIER 3 — shared card, sized + toned by tier

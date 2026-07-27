@@ -8,19 +8,18 @@ import {
   Cpu,
   Globe,
   Award,
-  BookOpen,
   GitBranch,
   Monitor,
   Zap,
-  Cloud,
-  Server,
-  Network,
-  Terminal,
   Briefcase,
   DatabaseZap,
   CloudLightning,
   Layers,
   TrendingUp,
+  Terminal,
+  Server,
+  Cloud,
+  Workflow
 } from 'lucide-react';
 import rafiPhoto from '../assets/rafiPhoto.jpg';
 
@@ -79,14 +78,13 @@ const skills = {
   ],
 
   devops: [
-    'Git',
-    'GitHub',
-    'GitLab',
+    'Git and Github',
     'Azure DevOps',
     'CI/CD',
     'Docker',
     'Kubernetes',
     'Terraform',
+    'Ansible'
   ],
 
   frontend: [
@@ -193,34 +191,35 @@ const About: React.FC = () => {
                 ))}
               </div>
             </div>
-         {/* Key Highlights */}
-<div className="space-y-6 mt-10 w-full">
-  <h3 className="text-2xl font-bold text-blue-400 border-b border-gray-700 pb-3">
-    Key Milestones
-  </h3>
-  <div className="space-y-6">
-    {highlights.map((highlight, idx) => (
-      <motion.div
-        key={idx}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: idx * 0.1 + 0.3 }}
-        viewport={{ once: true }}
-        className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-blue-600 transition-all duration-300 shadow-xl"
-      >
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 bg-blue-700/80 rounded-full flex items-center justify-center text-white flex-shrink-0">
-            {highlight.icon}
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-lg">{highlight.title}</h4>
-            <p className="text-sm text-gray-400 mt-1">{highlight.description}</p>
-          </div>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-</div>
+
+            {/* Key Highlights */}
+            <div className="space-y-6 mt-10 w-full">
+              <h3 className="text-2xl font-bold text-blue-400 border-b border-gray-700 pb-3">
+                Key Milestones
+              </h3>
+              <div className="space-y-6">
+                {highlights.map((highlight, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 + 0.3 }}
+                    viewport={{ once: true }}
+                    className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-blue-600 transition-all duration-300 shadow-xl"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 bg-blue-700/80 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                        {highlight.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-white text-lg">{highlight.title}</h4>
+                        <p className="text-sm text-gray-400 mt-1">{highlight.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
           {/* Right Column: Skills, Highlights, Education */}
@@ -257,40 +256,9 @@ const About: React.FC = () => {
                       <GitBranch className="w-4 h-4" /> Career Timeline
                     </h4>
 
-                    <div className="relative pl-7">
-                      {/* connecting vertical line with a subtle blue glow */}
+                    <div className="relative pl-7 space-y-6">
+                      {/* connecting vertical line */}
                       <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-blue-500 via-blue-600/40 to-blue-500/70 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-
-                      {/* Node 1 — Joined as Trainee */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="relative pb-8"
-                      >
-                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
-                          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500/50 blur-[3px]" />
-                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
-                        </span>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">December 2025</p>
-                        <h5 className="font-bold text-white mt-0.5">
-                          Joined Quadrant Technologies as Software Engineer Trainee
-                        </h5>
-                        <p className="text-sm text-gray-400 mt-2">
-                          Completed enterprise-grade training across:
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {traineeTraining.map((item, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2.5 py-1 text-[11px] bg-gray-800 rounded-full border border-gray-700 text-gray-300 font-medium"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      </motion.div>
 
                       {/* Node 2 — Promoted, current role */}
                       <motion.div
@@ -316,6 +284,37 @@ const About: React.FC = () => {
                           enterprise Microsoft Fabric customers.
                         </p>
                       </motion.div>
+
+                      {/* Node 1 — Joined as Trainee */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="relative"
+                      >
+                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
+                          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500/50 blur-[3px]" />
+                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
+                        </span>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">December 2025</p>
+                        <h5 className="font-bold text-white mt-0.5">
+                          Joined Quadrant Technologies as Software Engineer Trainee
+                        </h5>
+                        <p className="text-sm text-gray-400 mt-2">
+                          Completed enterprise-grade training across:
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {traineeTraining.map((item, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2.5 py-1 text-[11px] bg-gray-800 rounded-full border border-gray-700 text-gray-300 font-medium"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
 
@@ -324,9 +323,9 @@ const About: React.FC = () => {
                     <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
                       <Terminal className="w-4 h-4" /> Current Responsibilities
                     </h5>
-     <p className="text-sm text-gray-300 leading-relaxed">
-  As a Software Engineer, I work with enterprise <strong>Microsoft Fabric</strong> technologies, including <strong>Lakehouse</strong>, <strong>Data Warehouse</strong>, <strong>OneLake</strong>, <strong>PySpark</strong>, <strong>Data Pipelines</strong>, <strong>Semantic Models</strong>, and <strong>Power BI</strong>, delivering scalable data engineering and analytics solutions.
-</p>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      As a Software Engineer, I work with enterprise <strong>Microsoft Fabric</strong> technologies, including <strong>Lakehouse</strong>, <strong>Data Warehouse</strong>, <strong>OneLake</strong>, <strong>PySpark</strong>, <strong>Data Pipelines</strong>, <strong>Semantic Models</strong>, and <strong>Power BI</strong>, delivering scalable data engineering and analytics solutions.
+                    </p>
                   </div>
 
                   {/* Microsoft Fabric Expertise & Enterprise Technologies */}
@@ -450,18 +449,18 @@ const About: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {Object.entries(skills).map(([category, list], idx) => {
                   const Icon = {
-                    cloudDevOps: CloudLightning,
+                    microsoftFabric: Layers,
+                    cloud: Cloud,
+                    devops: Workflow,
                     databases: DatabaseZap,
                     frontend: Code,
                     backend: Cpu,
-                    iot: Zap,
-                    versionControl: GitBranch,
-                  }[category];
+                  }[category] || Terminal;
 
                   const displayName =
-                    category === 'cloudDevOps' ? 'Cloud & DevOps' :
-                    category === 'versionControl' ? 'Version Control' :
-                    category === 'iot' ? 'IoT / Embedded' :
+                    category === 'microsoftFabric' ? 'Microsoft Fabric' :
+                    category === 'cloud' ? 'Cloud & Infrastructure' :
+                    category === 'devops' ? 'DevOps & CI/CD' :
                     category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
 
                   return (
@@ -470,7 +469,7 @@ const About: React.FC = () => {
                       className="group p-4 rounded-lg transition-all duration-300 hover:bg-gray-800/70 hover:shadow-blue-500/20 hover:shadow-lg"
                     >
                       <h4 className="font-bold text-white mb-3 flex items-center gap-3 transition-colors">
-                        {Icon && <Icon className="w-6 h-6 text-blue-500 group-hover:text-blue-300" />}
+                        <Icon className="w-6 h-6 text-blue-500 group-hover:text-blue-300" />
                         {displayName}
                       </h4>
                       <ul className="text-sm text-gray-400 space-y-1 ml-4 list-none">
@@ -489,8 +488,6 @@ const About: React.FC = () => {
                 })}
               </div>
             </div>
-
-          
           </motion.div>
         </div>
 
