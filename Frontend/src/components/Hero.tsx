@@ -27,7 +27,7 @@ const Hero = () => {
   };
   const navigate = useNavigate();
   const titles = [
-    "Microsoft Certified Professional",
+    "Microsoft Certified ",
     "Software Engineer",
     "Full-Stack Developer",
     "Microsoft Fabric Engineer",

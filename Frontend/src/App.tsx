@@ -10,12 +10,15 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AboutPage from "./Pages/About";
 import ProjectPage from "./Pages/ProjectPage";
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
+
       <div className="min-h-screen bg-black text-white font-['Poppins',sans-serif]">
         <Navigation />
-          
+
         <main>
           <Routes>
             <Route
@@ -23,7 +26,6 @@ function App() {
               element={
                 <>
                   <div id="home">
-
                     <Hero />
                   </div>
                   <Skills />
@@ -32,17 +34,18 @@ function App() {
               }
             />
             <Route path="/project/:slug" element={<ProjectPage />} />
-             <Route path="/about" element={<AboutPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/resume" element={<Resume/>} />
+            <Route path="/resume" element={<Resume />} />
           </Routes>
         </main>
-        <Footer />
 
+        <Footer />
         <Analytics />
       </div>
     </Router>
   );
 }
+ 
 
 export default App;
