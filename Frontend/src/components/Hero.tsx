@@ -29,10 +29,8 @@ const Hero = () => {
   const titles = [
     "Microsoft Certified ",
     "Software Engineer",
-    "Full-Stack Developer",
-    "Microsoft Fabric Engineer",
-    "DevOps Engineer",
-    "AI Enthusiast",
+  "Cloud Engineer",
+  "Data Engineer",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -95,15 +93,23 @@ const Hero = () => {
           </AnimatePresence>
         </div>
 
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
-          className="text-lg md:text-xl mb-12 text-gray-300 max-w-2xl mx-auto"
-        >
-          Crafting robust software and intelligent systems with clean code and scalable architecture.
-        </motion.p>
+   {/* Personal Tagline */}
+
+<motion.p
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 1.5 }}
+  className="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl mx-auto leading-relaxed"
+  style={{
+    fontFamily: "'Edu NSW ACT Cursive', cursive",
+    fontWeight: 500,
+    letterSpacing: "0.02em",
+  }}
+>From code to cloud, from data to decisions, —
+  <span className="text-white">
+    {" "}building solutions that stand strong and scale with time.
+  </span>
+</motion.p>
 
         {/* Buttons */}
         <motion.div
