@@ -1,61 +1,21 @@
-import React from 'react'; 
+import React from 'react';
 import { motion } from 'framer-motion';
-
 import BadgesSection from '../components/BadgesSection';
 import {
   Code,
-  Database,
-  Cpu,
-  Globe,
-  Award,
   GitBranch,
-  Monitor,
-  Zap,
   Briefcase,
-  DatabaseZap,
-  CloudLightning,
   Layers,
   TrendingUp,
-  Terminal,
-  Server,
   Cloud,
-  Workflow
+  Workflow,
+  DatabaseZap,
+  Cpu,
+  GraduationCap,
 } from 'lucide-react';
-import rafiPhoto from '../assets/rafiPhoto.jpg';
+import picture from '../assets/picture.jpeg';
 
-const highlights = [
-  {
-    icon: <Server className="w-5 h-5" />,
-    title: "Software Engineer",
-    description: "Quadrant Technologies • Microsoft Fabric"
-  },
-  {
-    icon: <Database className="w-5 h-5" />,
-    title: "Microsoft Fabric",
-    description: "Lakehouse • Warehouse • PySpark • OneLake"
-  },
-  {
-    icon: <Award className="w-5 h-5" />,
-    title: "Microsoft Certified",
-    description: "AZ-104  AZ-400 DP-600 DP-700 DP-800  GH-200"
-  },
-  {
-    icon: <Briefcase className="w-5 h-5" />,
-    title: "Data Science Intern",
-    description: "NIT Trichy"
-  },
-  {
-    icon: <Globe className="w-5 h-5" />,
-    title: "Networking",
-    description: "Cisco Packet Tracer"
-  },
-  {
-    icon: <Code className="w-5 h-5" />,
-    title: "Open Source",
-    description: "GitHub Contributions"
-  },
-];
-
+// Technical Toolkit: keep every skill category and item together in one section.
 const skills = {
   microsoftFabric: [
     'Lakehouse',
@@ -64,441 +24,449 @@ const skills = {
     'Data Pipelines',
     'PySpark',
     'Spark Notebooks',
+    'Dataflows Gen2',
+    'Mirroring',
     'Power BI',
     'Semantic Models',
+    'SQL Analytics Endpoint',
   ],
 
   cloud: [
-    'Azure',
-    'Azure DevOps',
-    'SQL Server',
-    'Networking',
-    'Storage',
-    'Identity & Access Management',
+    'Microsoft Azure',
+    'Microsoft Entra ID',
+    'Azure Virtual Networks',
+    'Azure Storage',
+    'Azure Compute',
+    'Azure Resource Management',
+    'Azure Monitor',
+    'Azure Governance',
+    'Azure CLI',
+    'PowerShell',
   ],
 
   devops: [
-    'Git and Github',
+    'Git & GitHub',
+    'GitHub Actions',
     'Azure DevOps',
-    'CI/CD',
+    'CI/CD Pipelines',
+    'Build & Release Pipelines',
+    'Infrastructure as Code',
+    'ARM Templates & Bicep',
     'Docker',
     'Kubernetes',
     'Terraform',
-    'Ansible'
+    'Ansible',
   ],
 
-  frontend: [
-    'React',
-    'TypeScript',
-    'JavaScript',
-    'Tailwind CSS',
-    'HTML5',
-    'CSS3',
-  ],
+  frontend: ['React', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3'],
 
-  backend: [
-    'ASP.NET Core',
-    'Node.js',
-    'Python',
-  ],
+  backend: ['C#', 'ASP.NET Core', 'Node.js', 'Python', 'REST APIs'],
 
   databases: [
-    'SQL Server',
+    'Microsoft SQL Server',
+    'T-SQL',
+    'SQL Database Development',
     'MongoDB',
     'MySQL',
   ],
 };
 
-const softSkills = ['Problem Solving', 'Time Management', 'Communication', 'Teamwork', 'Creativity', 'Adaptability', 'Quick Learner'];
-
-const traineeTraining = ['SQL Server', 'Azure', 'Networking', 'Storage', 'DevOps Fundamentals', 'Microsoft Fabric Fundamentals'];
-
-const fabricExpertise = [
-  'Lakehouse',
-  'Warehouse',
-  'OneLake',
-  'PySpark',
-  'Spark Notebooks',
-  'Pipelines',
-  'Power BI',
-  'Semantic Models',
-  'Data Integration',
-  'Data Engineering',
-  'Mirroring',
-  'SQL Analytics Endpoint',
+const traineeTraining = [
+  'SQL Server',
+  'Azure',
+  'Networking',
+  'Storage',
+  'DevOps Fundamentals',
+  'Microsoft Fabric',
 ];
 
-const enterpriseTechnologies = ['Azure', 'SQL Server', 'Networking', 'Storage', 'DevOps', 'Cloud Infrastructure', 'Enterprise Support'];
+const internTags = ['Azure Fundamentals', 'SQL Server', 'Git & GitHub'];
+const coreDomains = ['Software Development', 'Cloud', 'DevOps', 'Data Engineering'];
+const professionalAttributes = [
+  'Problem Solver',
+  'Quick Learner',
+  'Adaptable',
+  'Effective Communicator',
+];
+const workFocus = [
+  'Enterprise Fabric Support',
+  'Data Engineering',
+  'Data Integration',
+  'Analytics Solutions',
+];
+
+const chipClass =
+  'rounded-full border border-blue-800/50 bg-blue-950/40 px-3 py-1.5 text-[11px] font-medium text-blue-200';
+const tagClass =
+  'rounded-md border border-gray-700 bg-gray-800 px-2 py-1 text-[10px] text-gray-300';
+const bulletListClass =
+  'mt-1.5 list-disc space-y-1 pl-4 text-xs leading-relaxed text-gray-400 marker:text-blue-500/60';
+const strongClass = 'font-semibold text-gray-200';
 
 const About: React.FC = () => {
-  return (
-    <section id="about" className="py-24 bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#010d24] via-black to-[#030a17] opacity-90"></div>
+  const toolkitCategories = [
+    { key: 'microsoftFabric', title: 'Microsoft Fabric', icon: Layers },
+    { key: 'cloud', title: 'Cloud & Infrastructure', icon: Cloud },
+    { key: 'devops', title: 'DevOps & CI/CD', icon: Workflow },
+    { key: 'frontend', title: 'Frontend', icon: Code },
+    { key: 'backend', title: 'Backend', icon: Cpu },
+    { key: 'databases', title: 'Databases', icon: DatabaseZap },
+  ] as const;
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Title */}
+  return (
+    <section id="about" className="relative overflow-hidden bg-black py-16 text-white md:py-20">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#010d24] via-black to-[#030a17] opacity-90" />
+
+      <div className="container relative z-10 mx-auto px-5 sm:px-6">
+        {/* Section heading */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true, amount: 0.1 }}
-          className="text-center mb-16"
+          className="mb-10 text-center"
         >
-          <h2 className="text-3xl md:text-6xl font-extrabold mb-8 tracking-tight">
+          <h2 className="mb-3 text-3xl font-extrabold tracking-tight md:text-4xl">
             About <span className="text-blue-500">Me</span>
           </h2>
-          <p className="text-gray-400 max-w-4xl mx-auto text-xl md:text-2xl font-light">
-            Full-Stack Developer & Cloud Enthusiast building <strong>scalable, enterprise-ready solutions</strong> with modern technologies.
+          <p className="mx-auto max-w-3xl text-sm leading-relaxed text-gray-400 md:text-base">
+            Software Engineer specializing in{' '}
+            <strong className="text-gray-200">Microsoft Cloud &amp; Data Platforms</strong>,
+            working across enterprise data solutions, cloud technologies and application
+            development.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-start">
-          {/* Left Column: Photo & Identity */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
+        {/* TOP ROW: profile on the left, professional summary on the right */}
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-7">
+          {/* Profile / identity panel */}
+          <motion.aside
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
             viewport={{ once: true, amount: 0.1 }}
-            className="flex flex-col items-center lg:items-start lg:col-span-1"
+            className="flex flex-col rounded-2xl border border-gray-800 bg-gray-900/55 p-6 shadow-xl backdrop-blur-sm lg:col-span-1"
           >
-            <div className="w-64 h-64 rounded-full overflow-hidden border-4 border-blue-600 shadow-xl mb-8">
-              <img src={rafiPhoto} alt="Abdul Rafi" className="w-full h-full object-cover" />
+            <div className="mx-auto mb-5 h-40 w-40 overflow-hidden rounded-full border-[3px] border-blue-600 p-1 shadow-[0_0_25px_rgba(37,99,235,0.18)] sm:h-44 sm:w-44 lg:h-40 lg:w-40">
+              <img
+                src={picture}
+                alt="Abdul Rafi"
+                className="h-full w-full rounded-full object-cover"
+              />
             </div>
 
-            <div className="text-left w-full max-w-xs sm:max-w-none">
-              <h3 className="text-2xl font-bold text-white mb-3">Abdul Rafi</h3>
-              <p className="text-blue-400 font-semibold text-lg mb-4">
-                Software Engineer 
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white">Abdul Rafi</h3>
+              <p className="mt-1 text-base font-semibold text-blue-400">Software Engineer</p>
+              <p className="mt-2 text-xs leading-relaxed text-gray-400">
+                Cloud &amp; Data Engineering <span className="text-gray-600">|</span> Application
+                Development
               </p>
-              <p className="text-gray-300 mb-6">
-                Passionate technologist specializing in <strong>cloud infrastructure</strong>, <strong>database management</strong>, and <strong>full-stack development</strong>. Currently mastering enterprise technologies to build robust, scalable applications.
-              </p>
+             
+      
             </div>
 
-            {/* Soft Skills */}
-            <div className="mt-8 w-full">
-              <h3 className="text-xl font-semibold text-blue-400 mb-4 lg:text-left text-center border-b border-gray-800 pb-2">
-                Attributes
-              </h3>
-              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                {softSkills.map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 text-xs bg-gray-800 rounded-full border border-gray-700 text-gray-300 font-medium hover:bg-blue-900/30 hover:border-blue-500 transition-colors cursor-default"
-                  >
-                    {skill}
+            <div className="mt-6 border-t border-gray-800 pt-5">
+              <h4 className="mb-3 text-sm font-semibold text-blue-300">Core Domains</h4>
+              <div className="flex flex-wrap gap-2">
+                {coreDomains.map((domain) => (
+                  <span key={domain} className={chipClass}>
+                    {domain}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Key Highlights */}
-            <div className="space-y-6 mt-10 w-full">
-              <h3 className="text-2xl font-bold text-blue-400 border-b border-gray-700 pb-3">
-                Key Milestones
-              </h3>
-              <div className="space-y-6">
-                {highlights.map((highlight, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 + 0.3 }}
-                    viewport={{ once: true }}
-                    className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-blue-600 transition-all duration-300 shadow-xl"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-blue-700/80 rounded-full flex items-center justify-center text-white flex-shrink-0">
-                        {highlight.icon}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-white text-lg">{highlight.title}</h4>
-                        <p className="text-sm text-gray-400 mt-1">{highlight.description}</p>
-                      </div>
-                    </div>
-                  </motion.div>
+            <div className="mt-6 border-t border-gray-800 pt-5">
+              <h4 className="mb-3 text-sm font-semibold text-blue-300">Professional Attributes</h4>
+              <div className="flex flex-wrap gap-2">
+                {professionalAttributes.map((attribute) => (
+                  <span key={attribute} className={chipClass}>
+                    {attribute}
+                  </span>
                 ))}
               </div>
             </div>
-          </motion.div>
 
-          {/* Right Column: Skills, Highlights, Education */}
+            <div className="mt-6 border-t border-gray-800 pt-5">
+              <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-blue-300">
+                <GraduationCap className="h-4 w-4" aria-hidden="true" />
+                Education
+              </h4>
+              <div className="rounded-xl border border-gray-800 bg-black/20 p-3">
+                <p className="text-xs font-semibold text-white">
+                  B.Tech · CSE with IoT Specialization
+                </p>
+                <p className="mt-1 text-[10px] text-gray-400">KITS Warangal</p>
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <p className="text-[10px] text-gray-500">June 2022 – May 2025</p>
+                  <span className="text-[10px] font-semibold text-gray-300">CGPA: 7.73</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 border-t border-gray-800 pt-5">
+              <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-blue-300">
+                <Briefcase className="h-4 w-4" aria-hidden="true" />
+                Internship
+              </h4>
+              <div className="rounded-xl border border-gray-800 bg-black/20 p-3">
+                <p className="text-xs font-semibold text-white">Data Science Intern</p>
+                <p className="mt-1 text-[11px] font-medium text-blue-300">NIT Tiruchirappalli</p>
+                <p className="mt-1 text-[10px] text-gray-500">June 2024 – July 2024</p>
+                <p className="mt-2 text-[10px] leading-relaxed text-gray-400">
+                  Exposure to data analysis, preprocessing and analytical techniques
+                  for extracting insights from datasets.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-xl border border-blue-800/40 bg-blue-950/25 p-3">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-bold text-white">6× Microsoft Certified</p>
+              </div>
+              <p className="mt-1 text-[10px] leading-relaxed text-gray-400">
+                Azure · DevOps · Fabric · SQL · GitHub
+              </p>
+            </div>
+          </motion.aside>
+
+          {/* Professional summary panel */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
             viewport={{ once: true, amount: 0.1 }}
-            className="lg:col-span-2 space-y-10"
+            className="lg:col-span-2"
           >
-            {/* Professional Summary */}
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 hover:border-blue-600 transition-all duration-300 shadow-xl">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white flex-shrink-0 shadow-lg">
-                  <Briefcase className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <h3 className="text-xl font-bold text-white">Professional Summary</h3>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs bg-blue-900/50 text-blue-300 px-3 py-1 rounded-full border border-blue-700/50 font-medium">
-                        Currently Working
-                      </span>
-                      <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                      </span>
-                    </div>
+            <div className="h-full rounded-2xl border border-gray-800 bg-gray-900/55 p-5 shadow-xl backdrop-blur-sm transition-colors duration-300 hover:border-blue-700/60 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600/15 text-blue-400">
+                    <Briefcase className="h-5 w-5" aria-hidden="true" />
                   </div>
-                  
-                  {/* Career Timeline */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-blue-300 mb-5 flex items-center gap-2">
-                      <GitBranch className="w-4 h-4" /> Career Timeline
-                    </h4>
-
-                    <div className="relative pl-7 space-y-6">
-                      {/* connecting vertical line */}
-                      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-blue-500 via-blue-600/40 to-blue-500/70 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-
-                      {/* Node 2 — Promoted, current role */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.15 }}
-                        viewport={{ once: true }}
-                        className="relative"
-                      >
-                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400/60" />
-                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-400 ring-4 ring-blue-400/25" />
-                        </span>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">
-                          July 2026 – Present
-                        </p>
-                        <h5 className="font-bold text-white mt-0.5 flex items-center gap-2">
-                          Promoted to Software Engineer
-                          <TrendingUp className="w-4 h-4 text-green-400" />
-                        </h5>
-                        <p className="text-sm text-gray-300 mt-2">
-                          Currently working on Microsoft's Data &amp; Analytics ecosystem while supporting
-                          enterprise Microsoft Fabric customers.
-                        </p>
-                      </motion.div>
-
-                      {/* Node 1 — Joined as Trainee */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="relative"
-                      >
-                        <span className="absolute -left-7 top-1 flex h-3 w-3 items-center justify-center">
-                          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500/50 blur-[3px]" />
-                          <span className="relative h-2.5 w-2.5 rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
-                        </span>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-400">December 2025</p>
-                        <h5 className="font-bold text-white mt-0.5">
-                          Joined Quadrant Technologies as Software Engineer Trainee
-                        </h5>
-                        <p className="text-sm text-gray-400 mt-2">
-                          Completed enterprise-grade training across:
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {traineeTraining.map((item, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2.5 py-1 text-[11px] bg-gray-800 rounded-full border border-gray-700 text-gray-300 font-medium"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Current Responsibilities */}
-                  <div className="mt-6 pt-6 border-t border-gray-800">
-                    <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                      <Terminal className="w-4 h-4" /> Current Responsibilities
-                    </h5>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                      As a Software Engineer, I work with enterprise <strong>Microsoft Fabric</strong> technologies, including <strong>Lakehouse</strong>, <strong>Data Warehouse</strong>, <strong>OneLake</strong>, <strong>PySpark</strong>, <strong>Data Pipelines</strong>, <strong>Semantic Models</strong>, and <strong>Power BI</strong>, delivering scalable data engineering and analytics solutions.
-                    </p>
-                  </div>
-
-                  {/* Microsoft Fabric Expertise & Enterprise Technologies */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-gray-800">
-                    <div>
-                      <h5 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
-                        <Layers className="w-4 h-4" /> Microsoft Fabric Expertise
-                      </h5>
-                      <div className="flex flex-wrap gap-2">
-                        {fabricExpertise.map((item, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1.5 text-xs font-medium bg-blue-950/40 rounded-lg border border-blue-800/40 text-blue-200 hover:border-blue-500 hover:bg-blue-900/40 transition-colors cursor-default"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h5 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
-                        <DatabaseZap className="w-4 h-4" /> Enterprise Technologies
-                      </h5>
-                      <div className="flex flex-wrap gap-2">
-                        {enterpriseTechnologies.map((item, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1.5 text-xs font-medium bg-gray-800 rounded-lg border border-gray-700 text-gray-300 hover:border-blue-500 hover:bg-blue-900/20 transition-colors cursor-default"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Shalsys Internship */}
-              <div className="mt-6 pt-6 border-t border-gray-800">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1">
-                    <Code className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-blue-300 mb-1">
-                      C# Developer Intern at Shalsys Private Limited
-                    </h4>
-                    <p className="text-gray-300 text-sm">
-                      Worked with an <strong>IT services and ERP consulting firm</strong>, gaining exposure to
-                      <strong> enterprise business solutions</strong> and <strong>ERP systems</strong>.
-                      Contributed to <strong>Windows-based application development using C#</strong>,
-                      wrote <strong>SQL Server queries</strong>, and gained foundational knowledge of
-                      <strong> ASP.NET Core MVC</strong>. Strengthened skills in
-                      <strong> remote collaboration</strong> and <strong>requirement analysis</strong>.
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Professional Summary</h3>
+                    <p className="mt-0.5 text-[11px] text-gray-500">
+                      Software Engineering · Cloud · Data Platforms
                     </p>
                   </div>
                 </div>
-
-                {/* Internship Skill Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                  <div>
-                    <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                      <Code className="w-4 h-4" /> Development Stack
-                    </h5>
-                    <ul className="text-sm text-gray-400 space-y-1">
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        C# & Windows Applications
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        .NET Framework
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        ASP.NET MVC / .NET Core
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h5 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                      <Layers className="w-4 h-4" /> ERP & Enterprise Exposure
-                    </h5>
-                    <ul className="text-sm text-gray-400 space-y-1">
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        Epicor ERP Technologies
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        Enterprise Business Solutions
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        Requirement Analysis & Remote Collaboration
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                <span className="hidden items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-300 sm:inline-flex">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                  Currently Working
+                </span>
               </div>
-            </div>
+<div className="space-y-3 text-sm leading-relaxed text-gray-300">
+  <p>
+    I am a <strong className="text-white">Software Engineer at Quadrant Technologies</strong>,
+    working at the intersection of cloud data engineering, platform operations, and enterprise
+    analytics. After joining as an intern in June 2025, I transitioned into a full-time
+    engineering role in December 2025.
+  </p>
 
-            {/* Education */}
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 flex items-start gap-4 hover:border-blue-600 transition-all duration-300 shadow-xl">
-              <Monitor className="w-7 h-7 text-blue-400 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="text-xl font-bold text-white">B.Tech in CSE with IoT Specialization</h3>
-                <p className="text-sm text-blue-400">KITS Warangal</p>
-                <p className="text-sm text-gray-400 mt-1">CGPA: 7.73</p>
-              </div>
-            </div>
+  <p>
+    My core focus is <strong className="text-white">Microsoft Fabric Data Engineering</strong>,
+    working across the data platform lifecycle, from ingestion and transformation to analytics
+    and reporting, with an emphasis on platform stability and operational efficiency.
+  </p>
 
-            {/* Technical Skills */}
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 shadow-2xl">
-              <h3 className="text-2xl font-bold text-blue-400 mb-5 border-b border-gray-700 pb-3">
-                Technical Toolkit
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {Object.entries(skills).map(([category, list], idx) => {
-                  const Icon = {
-                    microsoftFabric: Layers,
-                    cloud: Cloud,
-                    devops: Workflow,
-                    databases: DatabaseZap,
-                    frontend: Code,
-                    backend: Cpu,
-                  }[category] || Terminal;
+  <p>
+    My broader technical foundation spans
+    <strong className="text-white"> Microsoft Azure, networking, and DevOps</strong>,
+    alongside application development using
+    <strong className="text-white"> C#, ASP.NET Core MVC, SQL Server, and REST APIs</strong>.
+    This cross-functional background helps me understand enterprise solutions beyond
+    individual services and components.
+  </p>
+</div>
 
-                  const displayName =
-                    category === 'microsoftFabric' ? 'Microsoft Fabric' :
-                    category === 'cloud' ? 'Cloud & Infrastructure' :
-                    category === 'devops' ? 'DevOps & CI/CD' :
-                    category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
-
-                  return (
-                    <div
-                      key={idx}
-                      className="group p-4 rounded-lg transition-all duration-300 hover:bg-gray-800/70 hover:shadow-blue-500/20 hover:shadow-lg"
+              <div className="mt-5 border-t border-gray-800 pt-4">
+                <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold text-blue-300">
+                  <Layers className="h-4 w-4" aria-hidden="true" /> Current Work Focus
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {workFocus.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-lg border border-blue-800/40 bg-blue-950/40 px-2.5 py-1 text-[10px] font-medium text-blue-200"
                     >
-                      <h4 className="font-bold text-white mb-3 flex items-center gap-3 transition-colors">
-                        <Icon className="w-6 h-6 text-blue-500 group-hover:text-blue-300" />
-                        {displayName}
-                      </h4>
-                      <ul className="text-sm text-gray-400 space-y-1 ml-4 list-none">
-                        {list.map((skill, skillIdx) => (
-                          <li 
-                            key={skillIdx} 
-                            className="flex items-start"
-                          >
-                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 mr-2 flex-shrink-0"></span>
-                            {skill}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Career timeline */}
+              <div className="mt-5 border-t border-gray-800 pt-4">
+                <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold text-blue-300">
+                  <GitBranch className="h-4 w-4" aria-hidden="true" /> Career Timeline
+                </h4>
+
+                <div className="relative space-y-5 pl-6">
+                  <div className="absolute bottom-2 left-[5px] top-2 w-px bg-gradient-to-b from-blue-500 via-blue-600/50 to-gray-700" />
+
+                 {/* Software Engineer · Quadrant Technologies */}
+<div className="relative">
+  <span
+    aria-hidden="true"
+    className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-blue-400 ring-4 ring-blue-400/20"
+  />
+  <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-400">
+    <time dateTime="2025-12">December 2025</time> – Present
+  </p>
+
+  <h5 className="mt-1 flex flex-wrap items-center gap-2 text-sm font-bold text-white">
+    <span>Software Engineer</span>
+    <span className="text-gray-600" aria-hidden="true">·</span>
+    <span className="font-semibold text-blue-300">Quadrant Technologies</span>
+  
+  </h5>
+
+  <ul className={bulletListClass}>
+  <li>
+    Provide technical support and solution engineering for
+    <strong className={strongClass}> 6+ enterprise Microsoft Fabric customers</strong>,
+    managing Data Factory pipelines, Lakehouse workloads, Notebooks, Warehouses,
+    and Semantic Models across production environments.
+  </li>
+
+  <li>
+    Investigate and resolve
+    <strong className={strongClass}> 30–40 customer incidents per month</strong>,
+    performing root-cause analysis for ingestion failures, notebook execution issues,
+    semantic model refresh failures, and data transformation errors.
+  </li>
+
+  <li>
+    Implement validation frameworks, monitoring alerts, and retry mechanisms,
+    improving successful pipeline execution rates from approximately
+    <strong className={strongClass}> 85% to over 95%</strong>
+    across production workloads.
+  </li>
+</ul>
+</div>
+
+
+{/* Software Engineer Intern · Quadrant Technologies */}
+<div className="relative">
+  <span
+    aria-hidden="true"
+    className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-gray-500 ring-4 ring-gray-500/15"
+  />
+  <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+    <time dateTime="2025-06">June 2025</time> –{" "}
+    <time dateTime="2025-11">November 2025</time>
+  </p>
+
+  <h5 className="mt-1 flex flex-wrap items-center gap-2 text-sm font-bold text-white">
+    <span>Software Engineer Intern</span>
+    <span className="text-gray-600" aria-hidden="true">·</span>
+    <span className="font-semibold text-blue-300">Quadrant Technologies</span>
+  </h5>
+
+  <ul className={bulletListClass}>
+    <li>
+      Completed structured training across
+      <strong className={strongClass}> Microsoft Azure, SQL Server, Networking, Storage, C# and Microsoft Fabric</strong>,
+      gaining hands-on experience through labs and internal project assignments.
+    </li>
+
+    <li>
+      Contributed to internal engineering projects by developing SQL queries,
+      REST APIs and application features while participating in debugging,
+      testing and code review activities under senior engineer mentorship.
+    </li>
+
+    <li>
+      Built foundational knowledge in cloud infrastructure, data platforms and
+      enterprise application development, leading to a full-time engineering role.
+    </li>
+  </ul>
+
+  <div className="mt-2 flex flex-wrap gap-1.5">
+    {internTags.map((item) => (
+      <span key={item} className={tagClass}>
+        {item}
+      </span>
+    ))}
+  </div>
+</div>
+                  {/* C# Developer Intern · Shalsys */}
+                  <div className="relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-gray-500 ring-4 ring-gray-500/15"
+                    />
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                      <time dateTime="2025-03">March 2025</time> –{' '}
+                      <time dateTime="2025-05">May 2025</time>
+                    </p>
+                    <h5 className="mt-1 text-sm font-bold text-white">
+                      C# Developer Intern · Shalsys Private Limited
+                    </h5>
+                    <p className="mt-1 text-xs leading-relaxed text-gray-400">
+                      Worked on C# Windows applications and SQL Server queries, with foundational
+                      exposure to ASP.NET Core MVC, Epicor ERP and enterprise business solutions.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Optional concluding section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* SECOND ROW: one full-width Technical Toolkit section */}
+        <motion.section
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mt-16 pt-8 border-t border-gray-800"
-        ></motion.div>
+          transition={{ duration: 0.6, delay: 0.15 }}
+          viewport={{ once: true, amount: 0.08 }}
+          aria-labelledby="technical-toolkit-heading"
+          className="mt-7 rounded-2xl border border-gray-800 bg-gray-900/50 p-5 shadow-2xl backdrop-blur-sm sm:p-6"
+        >
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-2 border-b border-gray-700 pb-3">
+            <div>
+              <h3 id="technical-toolkit-heading" className="text-xl font-bold text-blue-400">
+                Technical Toolkit
+              </h3>
+              <p className="mt-1 text-xs text-gray-500">
+                Technologies and tools across my engineering disciplines
+              </p>
+            </div>
+            <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              {toolkitCategories.length} Skill Areas
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {toolkitCategories.map(({ key, title, icon: Icon }) => (
+              <div
+                key={key}
+                className="group rounded-xl border border-gray-800 bg-black/20 p-4 transition-all duration-300 hover:border-blue-700/60 hover:bg-gray-900/70"
+              >
+                <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
+                  <Icon
+                    className="h-5 w-5 text-blue-500 transition-colors group-hover:text-blue-300"
+                    aria-hidden="true"
+                  />
+                  {title}
+                </h4>
+                <ul className="ml-1 list-none space-y-1.5 text-xs text-gray-400">
+                  {skills[key].map((skill) => (
+                    <li key={skill} className="flex items-start">
+                      <span
+                        aria-hidden="true"
+                        className="mr-2 mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500"
+                      />
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </motion.section>
       </div>
 
       <BadgesSection />

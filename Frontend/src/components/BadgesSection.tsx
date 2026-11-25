@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, PanInfo, Variants } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { AnimatePresence, MotionConfig, motion, type PanInfo, type Variants } from "framer-motion";
+import { ArrowUpRight, BadgeCheck, ChevronLeft, ChevronRight } from "lucide-react";
 import DataAnalyticsImg from '../assets/data analytics.png';
 
 import google_1 from '../assets/google_1.png';
@@ -19,14 +19,15 @@ import Dp800 from '../assets/dp800.png';
 import Az400 from '../assets/az400.png';
 import Az104 from '../assets/az104.png';
 import Gh200 from '../assets/githubactions.png';
+import redis from '../assets/redis.png';
 
 // ============================================================
 // CONSTANTS
 // ============================================================
-const SPOTLIGHT_INTERVAL_MS = 5500;
-const SWIPE_THRESHOLD_PX = 60;
+const AUTOPLAY_MS = 7000;
+const SWIPE_DISTANCE_PX = 60;
+const SWIPE_VELOCITY = 500;
 const POST_DRAG_CLICK_GUARD_MS = 300;
-const MOBILE_BREAKPOINT_PX = 768;
 
 // ============================================================
 // TYPES
@@ -39,32 +40,43 @@ interface Badge {
   name: string;
   issuer: string;
   tier: Tier;
-  // Short one-line description — only populated for Tier 1
-  // flagship credentials, shown in the Spotlight Hero.
-  description?: string;
+  /** Exam / credential code, e.g. "DP-700". Flagship only. */
+  code?: string;
+  /** Certification level, e.g. "Associate". Flagship only. */
+  level?: string;
+  /** 1–2 sentence overview of what the credential covers. Flagship only. */
+  summary?: string;
+  /** Products / technologies the credential is about. Flagship only. */
+  technologies?: string[];
 }
 
 // ============================================================
-// DATA — badge fields (img/link/name/issuer) are unchanged.
-// A `tier` field drives the visual hierarchy below. Assignment
-// is based on industry recognition + relevance to Software
-// Engineering / Cloud / Data / the Microsoft ecosystem:
-//
-//   tier1 — Flagship: Microsoft certifications + the Data
-//           Science research internship. The strongest signals
-//           in the current dataset.
-//   tier2 — High-value platform certs (Google Cloud x3, AWS
-//           Educate x2).
-//   tier3 — Supporting Cisco Networks badges.
+// DATA
+// Flagship order is deliberate: Data Engineering leads, because
+// that is the specialisation recruiters should see first.
 // ============================================================
 const badges: Badge[] = [
   {
     img: Dp700,
     link: "https://learn.microsoft.com/api/credentials/share/en-us/Abdul1Rafi/D7500F731B21916C?sharingId=F405F5CEA2FEC3B5",
-    name: "Fabric Data Engineer Associate ",
+    name: "Fabric Data Engineer",
     issuer: "Microsoft",
     tier: "tier1",
-    description: "Validates skills in designing, implementing, and managing enterprise-scale data engineering solutions using Microsoft Fabric.",
+    code: "DP-700",
+    level: "Associate",
+    summary: "Validates the ability to design, build and operate enterprise data engineering solutions on Microsoft Fabric, from ingestion and transformation to monitoring and optimisation.",
+    technologies: ["Microsoft Fabric", "Lakehouse", "Data Pipelines", "PySpark", "T-SQL", "KQL"],
+  },
+  {
+    img: Dp600,
+    link: "https://learn.microsoft.com/api/credentials/share/en-us/Abdul1Rafi/570051E3818C2C89?sharingId=F405F5CEA2FEC3B5",
+    name: "Fabric Analytics Engineer",
+    issuer: "Microsoft",
+    tier: "tier1",
+    code: "DP-600",
+    level: "Associate",
+    summary: "Covers designing and building analytics solutions in Microsoft Fabric: preparing and serving data, and developing the semantic models that power Power BI reporting.",
+    technologies: ["Microsoft Fabric", "Power BI", "DAX", "Semantic Models", "Lakehouse & Warehouse", "T-SQL"],
   },
   {
     img: Az104,
@@ -72,7 +84,10 @@ const badges: Badge[] = [
     name: "Azure Administrator",
     issuer: "Microsoft",
     tier: "tier1",
-    description: "Validates skills in implementing, managing, and monitoring Azure identity, governance, storage, compute, virtual networks, and cloud resources.",
+    code: "AZ-104",
+    level: "Associate",
+    summary: "Validates hands-on administration of Azure: identities and governance, storage, compute, virtual networking, and monitoring and backup.",
+    technologies: ["Microsoft Entra ID", "Azure RBAC & Policy", "Virtual Machines", "Virtual Networks", "Azure Storage", "Azure Monitor"],
   },
   {
     img: Az400,
@@ -80,7 +95,21 @@ const badges: Badge[] = [
     name: "DevOps Engineer",
     issuer: "Microsoft",
     tier: "tier1",
-    description: "Validates expertise in designing and implementing DevOps practices, CI/CD pipelines, infrastructure automation, monitoring, and collaboration using Azure.",
+    code: "AZ-400",
+    level: "Expert",
+    summary: "Covers designing and implementing DevOps processes on Azure: source control, CI/CD pipelines, infrastructure automation, security and monitoring.",
+    technologies: ["Azure DevOps", "Azure Pipelines", "GitHub Actions", "Git", "Infrastructure as Code", "Azure Monitor"],
+  },
+  {
+    img: Dp800,
+    link: "https://learn.microsoft.com/api/credentials/share/en-us/Abdul1Rafi/DDAA5F7681D816BA?sharingId=F405F5CEA2FEC3B5",
+    name: "SQL AI Developer",
+    issuer: "Microsoft",
+    tier: "tier1",
+    code: "DP-800",
+    level: "Associate",
+    summary: "Covers building AI-enabled database solutions across SQL Server, Azure SQL and SQL databases in Microsoft Fabric, integrating AI directly into SQL-based applications.",
+    technologies: ["SQL Server", "Azure SQL", "SQL Database in Fabric", "T-SQL", "Vector Search"],
   },
   {
     img: Gh200,
@@ -88,193 +117,202 @@ const badges: Badge[] = [
     name: "GitHub Actions",
     issuer: "Microsoft",
     tier: "tier1",
-    description: "Validates proficiency in using GitHub Copilot to accelerate software development, improve code quality, and enhance developer productivity with AI.",
+    code: "GH-200",
+    summary: "Validates the ability to automate software workflows with GitHub Actions: authoring and maintaining workflows and actions, and managing Actions securely at scale.",
+    technologies: ["GitHub Actions", "YAML Workflows", "Reusable Workflows", "Custom Actions", "Runners", "Secrets & Environments"],
   },
-  {
-    img: Dp800,
-    link: "https://learn.microsoft.com/api/credentials/share/en-us/Abdul1Rafi/DDAA5F7681D816BA?sharingId=F405F5CEA2FEC3B5",
-    name: "SQL AI Developer Associate",
-    issuer: "Microsoft",
+    {
+    img: redis,
+    link: "https://credentials.redis.io/d15a06cb-7bcd-4517-a92a-2b73e454d919#acc.nBgGSP7k",
+    name: "Redis Associate Developer",
+    issuer: "Redis",
+    code:"Redis",
     tier: "tier1",
-    description: "Validates skills in implementing, managing, and optimizing SQL Server databases while leveraging AI-powered capabilities for modern data solutions.",
-  },
-  {
-    img: Dp600,
-    link: "https://learn.microsoft.com/api/credentials/share/en-us/Abdul1Rafi/570051E3818C2C89?sharingId=F405F5CEA2FEC3B5",
-    name: "Fabric Analytics Engineer Associate",
-    issuer: "Microsoft",
-    tier: "tier1",
-    description: "Validates expertise in designing, building, and optimizing enterprise analytics solutions using Microsoft Fabric, Power BI, and modern data warehousing.",
-  },
+    level: "Associate",
+     "summary": "Validates the foundational knowledge and skills required to design, build, and operate applications using Redis. Covers core data structures, caching strategies, pub/sub messaging, and basic persistence.",
+  "technologies": ["Redis", "In-Memory Database", "Caching", "NoSQL", "Data Structures", "Pub/Sub"]
+},
   {
     img: DataAnalyticsImg,
     link: "https://www.linkedin.com/posts/abdulrafi0870_data-science-internship-at-nit-trichy-activity-7225038436569595904-TMte?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEOf1RMBnMTpFDWRJN_Fj4ZQJTwrG57J6-8",
     name: "Data Science Internship",
     issuer: "NIT TRICHY",
     tier: "tier1",
-    description: "Research internship applying data analytics and visualization techniques to real-world datasets.",
+    summary: "Two-week offline research internship at NIT Tiruchirappalli (July 2024) focused on Machine Learning and Data Science.",
+    technologies: ["Machine Learning", "Data Science", "Data Analytics", "Data Visualisation"],
   },
-  { img: google_1, link: "https://www.credly.com/earner/earned/badge/89d0f82c-5eed-48d9-9f30-d04fb259bc28", name: " Cloud Computing", issuer: "Google Cloud ", tier: "tier2" },
+  { img: google_1, link: "https://www.credly.com/earner/earned/badge/89d0f82c-5eed-48d9-9f30-d04fb259bc28", name: "Cloud Computing", issuer: "Google Cloud", tier: "tier2" },
   { img: google_2, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "Google Cloud Network", issuer: "Google Cloud", tier: "tier2" },
   { img: google_3, link: "https://www.credly.com/earner/earned/badge/540b7f1e-800a-45b6-a36d-ecc1f003fe7e", name: "Load Balancer", issuer: "Google Cloud", tier: "tier2" },
-  { img: cybersecurity, link: "https://www.credly.com/badges/1b34e777-19e8-4393-8cf5-9b26f011b19c", name: "CyberSecurity", issuer: "Cisco Networks ", tier: "tier3" },
+  { img: amazon, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "Serverless", issuer: "AWS Educate", tier: "tier2" },
+  { img: amazon1, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: "AWS Storage", issuer: "AWS Educate", tier: "tier2" },
+  { img: cybersecurity, link: "https://www.credly.com/badges/1b34e777-19e8-4393-8cf5-9b26f011b19c", name: "Cybersecurity", issuer: "Cisco Networks", tier: "tier3" },
   { img: networking, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: "Networking", issuer: "Cisco Networks", tier: "tier3" },
   { img: python_1, link: "https://www.credly.com/badges/b233454e-1ed7-4b85-aeb3-5c6730824648", name: "Python Essentials", issuer: "Cisco Networks", tier: "tier3" },
-  { img: Ccna, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CCNA", issuer: "Cisco Network", tier: "tier3" },
-  { img: amazon, link: "https://www.credly.com/earner/earned/badge/e1da049b-959a-45cb-9095-0b533c22900f", name: "ServerLess", issuer: "AWS Educate", tier: "tier2" },
-  { img: amazon1, link: "https://www.credly.com/badges/1297ccee-71b5-4541-a35f-bc88c80722ee", name: " AWS Storage", issuer: "AWS Educate", tier: "tier2" },
+  { img: Ccna, link: "https://www.credly.com/badges/3089f15a-92f9-436d-9dc2-537b110ff33b", name: "CCNA", issuer: "Cisco Networks", tier: "tier3" },
 ];
 
-const TIER1_BADGES = badges.filter((b) => b.tier === "tier1");
-const TIER2_BADGES = badges.filter((b) => b.tier === "tier2");
-const TIER3_BADGES = badges.filter((b) => b.tier === "tier3");
+const FLAGSHIP = badges.filter((b) => b.tier === "tier1");
+const CLOUD = badges.filter((b) => b.tier === "tier2");
+const ADDITIONAL = badges.filter((b) => b.tier === "tier3");
+
+// Stats are derived from the data above, so they can never drift out of date.
+const STATS = [
+  { value: badges.filter((b) => b.issuer === "Microsoft").length, label: "Microsoft certifications" },
+  { value: badges.length, label: "Credentials & badges" },
+  { value: new Set(badges.map((b) => b.issuer)).size, label: "Issuing organisations" },
+];
 
 // ============================================================
 // HOOKS
 // ============================================================
-
-/** Tracks whether the viewport is at/below the mobile breakpoint, live. */
-function useIsMobile(breakpointPx: number = MOBILE_BREAKPOINT_PX): boolean {
-  const [isMobile, setIsMobile] = useState<boolean>(() =>
-    typeof window !== "undefined" ? window.innerWidth < breakpointPx : false
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState<boolean>(() =>
+    typeof window !== "undefined" && !!window.matchMedia ? window.matchMedia(query).matches : false
   );
-
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
-    const mql = window.matchMedia(`(max-width: ${breakpointPx - 1}px)`);
-    const handleChange = () => setIsMobile(mql.matches);
-    handleChange();
-    mql.addEventListener("change", handleChange);
-    return () => mql.removeEventListener("change", handleChange);
-  }, [breakpointPx]);
-
-  return isMobile;
+    const mql = window.matchMedia(query);
+    const onChange = () => setMatches(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
 }
 
-/** Tracks the user's reduced-motion preference, live (responds to OS changes). */
-function usePrefersReducedMotion(): boolean {
-  const [prefersReduced, setPrefersReduced] = useState<boolean>(() =>
-    typeof window !== "undefined" && window.matchMedia
-      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      : false
-  );
-
+/** True while the element is on screen — used to pause autoplay off-screen. */
+function useInViewport<T extends Element>(ref: React.RefObject<T>, rootMargin = "-10% 0px"): boolean {
+  const [inView, setInView] = useState<boolean>(true);
   useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleChange = () => setPrefersReduced(mql.matches);
-    mql.addEventListener("change", handleChange);
-    return () => mql.removeEventListener("change", handleChange);
-  }, []);
-
-  return prefersReduced;
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { rootMargin });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, rootMargin]);
+  return inView;
 }
 
 // ============================================================
-// SECTION EYEBROW — a small reusable label used to introduce
-// each tier, so the story ("flagship → core → additional") is
-// legible even before a recruiter reads a single badge name.
+// SMALL PIECES
 // ============================================================
-const SectionEyebrow: React.FC<{ label: string; description: string }> = React.memo(
-  ({ label, description }) => (
+const MicrosoftMark: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 23 23" className={className} aria-hidden="true">
+    <path fill="#f25022" d="M1 1h10v10H1z" />
+    <path fill="#7fba00" d="M12 1h10v10H12z" />
+    <path fill="#00a4ef" d="M1 12h10v10H1z" />
+    <path fill="#ffb900" d="M12 12h10v10H12z" />
+  </svg>
+);
+
+const GroupHeading: React.FC<{ title: string; description: string; count?: number }> = React.memo(
+  ({ title, description, count }) => (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="mb-8 flex flex-col items-center text-center"
+      transition={{ duration: 0.5 }}
+      className="mb-5 flex items-end justify-between gap-4 border-b border-white/10 pb-3"
     >
-      <span className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">{label}</span>
-      <p className="max-w-md text-sm text-gray-500">{description}</p>
+      <div>
+        <h3 className="text-base font-semibold text-white md:text-lg">{title}</h3>
+        <p className="mt-0.5 text-xs text-gray-500 md:text-sm">{description}</p>
+      </div>
+      {count !== undefined && (
+        <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-gray-400">
+          {count}
+        </span>
+      )}
     </motion.div>
   )
 );
-SectionEyebrow.displayName = "SectionEyebrow";
+GroupHeading.displayName = "GroupHeading";
 
 // ============================================================
-// TIER 1 — SPOTLIGHT HERO
-// Auto-rotating, single flagship card. Largest image, richest
-// motion, an animated conic-gradient halo, and a persistent
-// (not hover-only) CTA — maximum, undivided attention.
-//
-// Interaction model:
-//   - Desktop: hover pauses autoplay, arrow buttons + dots navigate.
-//   - Mobile: horizontal drag/swipe navigates, autoplay pauses while
-//     dragging and resumes afterwards, vertical scroll is untouched
-//     (touchAction: "pan-y"), and a short post-drag guard prevents
-//     the underlying credential link from opening accidentally.
-//   - Both: respects prefers-reduced-motion by disabling autoplay.
+// FLAGSHIP SHOWCASE
+// Desktop: large feature card (left) + always-visible selector
+// rail (right) so every flagship credential is visible at once.
+// Mobile/tablet: card on top (swipe left/right), rail becomes a
+// horizontally scrollable strip underneath.
+// Autoplay pauses on hover, focus, drag, off-screen and when the
+// user prefers reduced motion.
 // ============================================================
-// ============================================================
-// TIER 1 — SPOTLIGHT HERO (MOBILE SWIPE OPTIMIZED)
-// ============================================================
-const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
-  const isMobile = useIsMobile();
-  const prefersReducedMotion = usePrefersReducedMotion();
+const slideVariants: Variants = {
+  enter: (dir: number) => ({ opacity: 0, x: dir >= 0 ? 48 : -48 }),
+  center: { opacity: 1, x: 0 },
+  exit: (dir: number) => ({ opacity: 0, x: dir >= 0 ? -48 : 48 }),
+};
 
-  const [index, setIndex] = useState<number>(0);
-  const [direction, setDirection] = useState<number>(0);
-  const [isHovering, setIsHovering] = useState<boolean>(false);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+const FlagshipShowcase: React.FC<{ items: Badge[] }> = ({ items }) => {
+  const canSwipe = useMediaQuery("(max-width: 1023px), (pointer: coarse)");
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-  const justDraggedRef = useRef<boolean>(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+  const justDraggedRef = useRef(false);
+  const inView = useInViewport(wrapRef);
 
-  const itemCount = items.length;
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [hovering, setHovering] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  const count = items.length;
   const badge = items[index] ?? items[0];
 
   const go = useCallback(
     (dir: 1 | -1) => {
       setDirection(dir);
-      setIndex((prev) => (prev + dir + itemCount) % itemCount);
+      setIndex((prev) => (prev + dir + count) % count);
     },
-    [itemCount]
+    [count]
   );
 
-  const isAutoplayActive = useMemo(
-    () => itemCount > 1 && !isHovering && !isDragging && !prefersReducedMotion,
-    [itemCount, isHovering, isDragging, prefersReducedMotion]
+  const select = useCallback(
+    (i: number) => {
+      setDirection(i >= index ? 1 : -1);
+      setIndex(i);
+    },
+    [index]
   );
 
-  // Autoplay loop
+  const autoplay = count > 1 && inView && !hovering && !focused && !dragging && !prefersReducedMotion;
+
+  // One timeout per slide keeps the timer and the progress bar in lock-step,
+  // and any manual change restarts the countdown.
   useEffect(() => {
-    if (!isAutoplayActive) return;
-    timerRef.current = setInterval(() => {
-      go(1);
-    }, SPOTLIGHT_INTERVAL_MS);
+    if (!autoplay) return;
+    const t = window.setTimeout(() => go(1), AUTOPLAY_MS);
+    return () => window.clearTimeout(t);
+  }, [autoplay, index, go]);
 
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isAutoplayActive, go]);
+  // Keep the active thumbnail centred in the horizontal rail (mobile/tablet).
+  // Scrolls only the rail itself, never the page.
+  useEffect(() => {
+    const rail = railRef.current;
+    const el = rail?.children[index] as HTMLElement | undefined;
+    if (!rail || !el || rail.scrollWidth <= rail.clientWidth) return;
+    rail.scrollTo({
+      left: el.offsetLeft - (rail.clientWidth - el.clientWidth) / 2,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, [index, prefersReducedMotion]);
 
-  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovering(false), []);
-
-  const handleDragStart = useCallback(() => {
+  const onDragStart = useCallback(() => {
     justDraggedRef.current = true;
-    setIsDragging(true);
+    setDragging(true);
   }, []);
 
-  // Professional Drag & Velocity Handling
-  const handleDragEnd = useCallback(
-    (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      setIsDragging(false);
-
-      const offset = info.offset.x;
-      const velocity = info.velocity.x;
-
-      // Trigger swipe if user dragged far enough OR flicked quickly
-      const isSwipe = Math.abs(offset) > SWIPE_THRESHOLD_PX || Math.abs(velocity) > 500;
-
-      if (isSwipe) {
-        if (offset < 0 || velocity < -500) {
-          go(1); // Swipe left -> Next
-        } else if (offset > 0 || velocity > 500) {
-          go(-1); // Swipe right -> Previous
-        }
+  const onDragEnd = useCallback(
+    (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+      setDragging(false);
+      const { x: offset } = info.offset;
+      const { x: velocity } = info.velocity;
+      if (Math.abs(offset) > SWIPE_DISTANCE_PX || Math.abs(velocity) > SWIPE_VELOCITY) {
+        go(offset < 0 || velocity < -SWIPE_VELOCITY ? 1 : -1);
       }
-
       window.setTimeout(() => {
         justDraggedRef.current = false;
       }, POST_DRAG_CLICK_GUARD_MS);
@@ -282,688 +320,400 @@ const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
     [go]
   );
 
-  const guardLinkClick = useCallback((event: React.MouseEvent) => {
+  // Stops the click that follows a swipe from opening the credential link.
+  const guardClick = useCallback((e: React.MouseEvent) => {
     if (justDraggedRef.current) {
-      event.preventDefault();
-      event.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
     }
   }, []);
 
-  const handlePrev = useCallback(() => go(-1), [go]);
-  const handleNext = useCallback(() => go(1), [go]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (itemCount < 2) return;
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (count < 2) return;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
         go(-1);
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
         go(1);
       }
     },
-    [go, itemCount]
+    [count, go]
   );
 
-  if (itemCount === 0) return null;
+  if (count === 0) return null;
 
-  const slideVariants: Variants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
-  };
+  const isMicrosoft = badge.issuer === "Microsoft";
+  const isLinkedIn = badge.link.includes("linkedin.com");
 
   return (
-    <div className="mb-24">
-      <SectionEyebrow
-        label="Tier 1 · Flagship Achievements"
-        description="The credentials that define my professional identity."
-      />
-
+    <div className="mb-14 md:mb-16">
       <div
-        className="relative mx-auto max-w-5xl"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onKeyDown={handleKeyDown}
+        ref={wrapRef}
+        className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_132px] lg:gap-5"
         role="region"
         aria-roledescription="carousel"
-        aria-label="Flagship credential spotlight"
+        aria-label="Flagship credentials"
         tabIndex={0}
+        onKeyDown={onKeyDown}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        onFocusCapture={() => setFocused(true)}
+        onBlurCapture={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+        }}
       >
-        <div className="spotlight-halo pointer-events-none absolute -inset-[2px] rounded-[32px] opacity-70" />
-        <div className="pointer-events-none absolute -inset-16 -z-10 rounded-full bg-blue-600/20 blur-[100px]" />
+        {/* ---------------- Feature card ---------------- */}
+        <div className="relative min-w-0 overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-[#0a1020] via-[#05070d] to-black shadow-[0_30px_80px_-40px_rgba(37,99,235,0.45)]">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-blue-500/70 to-transparent" />
 
-        <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-gray-950 via-black to-gray-950 p-[2px]">
-          <div className="relative overflow-hidden rounded-[28px] bg-black/90 backdrop-blur-2xl">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={badge.link + badge.name}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-                drag={isMobile ? "x" : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                dragDirectionLock
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                style={{ touchAction: "pan-y" }}
-                className="flex select-none flex-col items-center gap-10 p-8 md:flex-row md:p-16"
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
+            <motion.div
+              key={badge.link + badge.name}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              drag={canSwipe ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.15}
+              dragDirectionLock
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              style={{ touchAction: "pan-y" }}
+              className="flex min-h-[600px] select-none flex-col md:min-h-[640px] lg:min-h-[540px] lg:flex-row"
+            >
+              {/* Certificate — the hero of the card */}
+              <a
+                href={badge.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
+                onClick={guardClick}
+                className="group relative flex items-center justify-center overflow-hidden bg-white/[0.02] p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400/80 sm:p-8 lg:w-[58%] lg:shrink-0 lg:border-r lg:border-white/10 lg:p-10"
               >
-                {/* Badge Image */}
-                <a
-                  href={badge.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
-                  onClick={guardLinkClick}
-                  className="relative flex-shrink-0 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80"
-                >
-                  <motion.div
-                    animate={{ scale: [1, 1.03, 1] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0 rounded-3xl bg-blue-500/40 blur-3xl"
-                  />
-                  <motion.div
-                    whileHover={{ scale: 1.06, rotate: 2 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                    className="relative flex h-48 w-48 items-center justify-center rounded-3xl border border-blue-500/30 bg-gradient-to-br from-gray-800 to-gray-950 p-7 shadow-[0_0_80px_-10px_rgba(59,130,246,0.6)] md:h-60 md:w-60"
-                  >
-                    <img
-                      src={badge.img}
-                      alt={badge.name}
-                      draggable={false}
-                      className="h-full w-full object-contain pointer-events-none"
-                    />
-                  </motion.div>
-                </a>
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{ background: "radial-gradient(60% 60% at 50% 50%, rgba(37,99,235,0.18), transparent)" }}
+                />
+                <motion.img
+                  src={badge.img}
+                  alt={badge.name}
+                  draggable={false}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                  className="pointer-events-none relative h-auto max-h-[260px] w-full rounded-lg object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.65)] sm:max-h-[360px] lg:max-h-[480px]"
+                />
+              </a>
 
-                {/* Badge Information */}
-                <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
-                  <h3 className="mb-2 text-3xl font-bold leading-tight text-white md:text-5xl">
-                    {badge.name.trim()}
-                  </h3>
-                  <p className="mb-3 text-lg font-medium text-gray-400">{badge.issuer.trim()}</p>
-                  {badge.description && (
-                    <p className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">{badge.description}</p>
+              {/* Information */}
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-5 p-6 pb-16 sm:p-8 sm:pb-16 lg:p-10 lg:pb-16">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-gray-200">
+                    {isMicrosoft && <MicrosoftMark className="h-3.5 w-3.5" />}
+                    {isMicrosoft ? "Microsoft Certified" : badge.issuer}
+                  </span>
+                  {badge.code && (
+                    <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-bold tracking-wider text-blue-300">
+                      {badge.code}
+                    </span>
                   )}
+                  {badge.level && (
+                    <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-gray-300">
+                      {badge.level}
+                    </span>
+                  )}
+                </div>
 
-                  <div className="mb-8 flex items-center gap-2">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-                    <span className="text-sm font-medium text-green-400">Verified Credential</span>
+                <h3 className="text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl xl:text-5xl">
+                  {badge.name}
+                </h3>
+
+                {badge.summary && (
+                  <p className="text-base leading-relaxed text-gray-300">{badge.summary}</p>
+                )}
+
+                {badge.technologies && (
+                  <div>
+                    <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                      {badge.code ? "Technologies" : "Focus areas"}
+                    </p>
+                    <ul className="flex flex-wrap gap-2">
+                      {badge.technologies.map((tech) => (
+                        <li
+                          key={tech}
+                          className="rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-200"
+                        >
+                          {tech}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
+                )}
 
+                <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-4">
                   <a
                     href={badge.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={guardLinkClick}
-                    className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:bg-blue-500 hover:shadow-blue-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                    onClick={guardClick}
+                    className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-colors duration-300 hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
                   >
-                    View Credential
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    {isLinkedIn ? "View on LinkedIn" : "View credential"}
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
+                  {!isLinkedIn && (
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
+                      <BadgeCheck className="h-4 w-4" />
+                      Verified credential
+                    </span>
+                  )}
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-            {/* Carousel Controls (Desktop) */}
-            {itemCount > 1 && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Previous credential"
-                  onClick={handlePrev}
-                  className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next credential"
-                  onClick={handleNext}
-                  className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Indicators */}
-        {itemCount > 1 && (
-          <div className="mt-6 flex items-center justify-center gap-2">
-            {items.map((item, i) => (
+          {/* Counter + arrows (desktop) */}
+          {count > 1 && (
+            <div className="absolute bottom-4 right-4 hidden items-center gap-3 md:flex">
+              <span className="text-xs font-medium tabular-nums text-gray-500">
+                {index + 1} / {count}
+              </span>
               <button
-                key={item.link + item.name}
                 type="button"
-                aria-label={`Show credential ${i + 1}`}
-                onClick={() => {
-                  setDirection(i > index ? 1 : -1);
-                  setIndex(i);
-                }}
-                className="relative h-1.5 w-10 overflow-hidden rounded-full bg-white/10"
+                aria-label="Previous credential"
+                onClick={() => go(-1)}
+                className="rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 transition-colors hover:border-blue-400/60 hover:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
               >
-                {i === index && isAutoplayActive && (
-                  <motion.span
-                    key={`${index}-progress`}
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: SPOTLIGHT_INTERVAL_MS / 1000, ease: "linear" }}
-                    className="absolute inset-y-0 left-0 rounded-full bg-blue-400"
-                  />
-                )}
-                {i === index && !isAutoplayActive && (
-                  <span className="absolute inset-0 rounded-full bg-blue-400" />
-                )}
+                <ChevronLeft className="h-4 w-4" />
               </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-// const SpotlightHero: React.FC<{ items: Badge[] }> = ({ items }) => {
-//   const isMobile = useIsMobile();
-//   const prefersReducedMotion = usePrefersReducedMotion();
+              <button
+                type="button"
+                aria-label="Next credential"
+                onClick={() => go(1)}
+                className="rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 transition-colors hover:border-blue-400/60 hover:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
 
-//  const [[index, direction], setIndex] = useState([0, 0]);
-//   const [isHovering, setIsHovering] = useState(false);
-//   const [isDragging, setIsDragging] = useState(false);
-
-//   // Guards against the synthetic "click" some mobile browsers fire
-//   // right after a touch-drag ends, which would otherwise open the
-//   // credential link mid-swipe.
-//   const justDraggedRef = useRef(false);
-//   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-//   const itemCount = items.length;
-//   const badge = items[index] ?? items[0];
-
-//   const isAutoplayActive = useMemo(
-//     () => itemCount > 1 && !isHovering && !isDragging && !prefersReducedMotion,
-//     [itemCount, isHovering, isDragging, prefersReducedMotion]
-//   );
-
-//   const go = useCallback(
-//   (dir: 1 | -1) => {
-//     setIndex(([prev]) => [
-//       (prev + dir + itemCount) % itemCount,
-//       dir,
-//     ]);
-//   },
-//   [itemCount]
-// );
-
-//   // Autoplay loop — only ever active when isAutoplayActive is true.
-//   useEffect(() => {
-//     if (!isAutoplayActive) return;
-//     timerRef.current = setInterval(() => {
-//       setIndex((prev) => (prev + 1) % itemCount);
-//     }, SPOTLIGHT_INTERVAL_MS);
-//     return () => {
-//       if (timerRef.current) clearInterval(timerRef.current);
-//     };
-//   }, [isAutoplayActive, itemCount]);
-
-//   const handleMouseEnter = useCallback(() => setIsHovering(true), []);
-//   const handleMouseLeave = useCallback(() => setIsHovering(false), []);
-
-//   const handleDragStart = useCallback(() => {
-//     justDraggedRef.current = true;
-//     setIsDragging(true);
-//   }, []);
-
-//   const handleDragEnd = useCallback(
-//     (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-//       setIsDragging(false);
-//       if (info.offset.x < -SWIPE_THRESHOLD_PX) {
-//         go(1);
-//       } else if (info.offset.x > SWIPE_THRESHOLD_PX) {
-//         go(-1);
-//       }
-//       window.setTimeout(() => {
-//         justDraggedRef.current = false;
-//       }, POST_DRAG_CLICK_GUARD_MS);
-//     },
-//     [go]
-//   );
-
-//   // Swallows the click that follows a drag so the credential link
-//   // doesn't open while (or right after) the user is swiping.
-//   const guardLinkClick = useCallback((event: React.MouseEvent) => {
-//     if (justDraggedRef.current) {
-//       event.preventDefault();
-//     }
-//   }, []);
-
-//   const handlePrev = useCallback(() => go(-1), [go]);
-//   const handleNext = useCallback(() => go(1), [go]);
-
-//   const handleKeyDown = useCallback(
-//     (event: React.KeyboardEvent) => {
-//       if (itemCount < 2) return;
-//       if (event.key === "ArrowLeft") {
-//         event.preventDefault();
-//         go(-1);
-//       } else if (event.key === "ArrowRight") {
-//         event.preventDefault();
-//         go(1);
-//       }
-//     },
-//     [go, itemCount]
-//   );
-
-//   if (itemCount === 0) return null;
-
-//   return (
-//     <div className="mb-24">
-//       <SectionEyebrow
-//         label="Tier 1 · Flagship Achievements"
-//         description="The credentials that define my professional identity."
-//       />
-
-//       <div
-//         className="relative mx-auto max-w-5xl"
-//         onMouseEnter={handleMouseEnter}
-//         onMouseLeave={handleMouseLeave}
-//         onKeyDown={handleKeyDown}
-//         role="region"
-//         aria-roledescription="carousel"
-//         aria-label="Flagship credential spotlight"
-//         tabIndex={0}
-//       >
-//         {/* Rotating conic-gradient halo — the section's signature element */}
-//         <div className="spotlight-halo pointer-events-none absolute -inset-[2px] rounded-[32px] opacity-70" />
-//         <div className="pointer-events-none absolute -inset-16 -z-10 rounded-full bg-blue-600/20 blur-[100px]" />
-
-//         <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-gray-950 via-black to-gray-950 p-[2px]">
-//           <div className="relative overflow-hidden rounded-[28px] bg-black/90 backdrop-blur-2xl">
-//             <AnimatePresence mode="wait">
-//               <motion.div
-//                 key={badge.link + badge.name}
-//                 drag={isMobile ? "x" : false}
-//                 dragConstraints={{ left: 0, right: 0 }}
-//                 dragElastic={0.12}
-//                 dragMomentum={false}
-//                 dragDirectionLock
-//                 onDragStart={handleDragStart}
-//                 onDragEnd={handleDragEnd}
-//                 style={{ touchAction: "pan-y" }}
-//                 initial={{ opacity: 0, x: 60 }}
-//                 animate={{ opacity: 1, x: 0 }}
-//                 exit={{ opacity: 0, x: -60 }}
-//                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-//                 className="flex select-none flex-col items-center gap-10 p-10 md:flex-row md:p-16"
-//               >
-//                 {/* Image with pulsing glow */}
-//                 <a
-//                   href={badge.link}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
-//                   onClick={guardLinkClick}
-//                   className="relative flex-shrink-0 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80"
-//                 >
-//                   <motion.div
-//                     animate={{ scale: [1, 1.03, 1] }}
-//                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-//                     className="absolute inset-0 rounded-3xl bg-blue-500/40 blur-3xl"
-//                   />
-//                   <motion.div
-//                     whileHover={{ scale: 1.06, rotate: 2 }}
-//                     transition={{ type: "spring", stiffness: 260, damping: 18 }}
-//                     className="relative flex h-48 w-48 items-center justify-center rounded-3xl border border-blue-500/30 bg-gradient-to-br from-gray-800 to-gray-950 p-7 shadow-[0_0_80px_-10px_rgba(59,130,246,0.6)] md:h-60 md:w-60"
-//                   >
-//                     <img
-//                       src={badge.img}
-//                       alt={badge.name}
-//                       draggable={false}
-//                       className="h-full w-full object-contain"
-//                     />
-//                   </motion.div>
-//                 </a>
-
-//                 {/* Copy */}
-//                 <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
-                 
-//                   <h3 className="mb-2 text-3xl font-bold leading-tight text-white md:text-5xl">
-//                     {badge.name.trim()}
-//                   </h3>
-//                   <p className="mb-3 text-lg font-medium text-gray-400">{badge.issuer.trim()}</p>
-//                   {badge.description && (
-//                     <p className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">{badge.description}</p>
-//                   )}
-
-//                   <div className="mb-8 flex items-center gap-2">
-//                     <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-//                     <span className="text-sm font-medium text-green-400">Verified Credential</span>
-//                   </div>
-
-//                   <a
-//                     href={badge.link}
-//                     target="_blank"
-//                     rel="noopener noreferrer"
-//                     onClick={guardLinkClick}
-//                     className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:bg-blue-500 hover:shadow-blue-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-//                   >
-//                     View Credential
-//                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-//                   </a>
-//                 </div>
-//               </motion.div>
-//             </AnimatePresence>
-
-//             {/* Arrows — desktop only */}
-//             {itemCount > 1 && (
-//               <>
-//                 <button
-//                   type="button"
-//                   aria-label="Previous flagship credential"
-//                   onClick={handlePrev}
-//                   className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-//                 >
-//                   <ChevronLeft className="h-5 w-5" />
-//                 </button>
-//                 <button
-//                   type="button"
-//                   aria-label="Next flagship credential"
-//                   onClick={handleNext}
-//                   className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/50 p-2 text-gray-300 backdrop-blur-md transition-colors hover:border-blue-400/60 hover:text-blue-300 md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-//                 >
-//                   <ChevronRight className="h-5 w-5" />
-//                 </button>
-//               </>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Dots + auto-advance progress */}
-//         {itemCount > 1 && (
-//           <div className="mt-6 flex items-center justify-center gap-2">
-//             {items.map((item, i) => (
-//               <button
-//                 key={item.link + item.name}
-//                 type="button"
-//                 aria-label={`Show flagship credential ${i + 1}: ${item.name}`}
-//                 aria-current={i === index}
-//                 onClick={() => setIndex(i)}
-//                 className="relative h-1.5 w-10 overflow-hidden rounded-full bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-//               >
-//                 {i === index && isAutoplayActive && (
-//                   <motion.span
-//                     key={`${index}-progress`}
-//                     initial={{ width: "0%" }}
-//                     animate={{ width: "100%" }}
-//                     transition={{ duration: SPOTLIGHT_INTERVAL_MS / 1000, ease: "linear" }}
-//                     className="absolute inset-y-0 left-0 rounded-full bg-blue-400"
-//                   />
-//                 )}
-//                 {i === index && !isAutoplayActive && (
-//                   <span className="absolute inset-0 rounded-full bg-blue-400" />
-//                 )}
-//               </button>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// ============================================================
-// TIER 2 / TIER 3 — shared card, sized + toned by tier
-// ============================================================
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.97 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.5, delay: Math.min(i * 0.06, 0.5), ease: [0.22, 1, 0.36, 1] },
-  }),
-};
-
-interface StaticTierStyle {
-  Icon: typeof ShieldCheck;
-  eyebrow: string;
-  imgBox: string;
-  titleSize: string;
-  padding: string;
-  borderIdle: string;
-  borderHover: string;
-  glow: string;
-  lift: number;
-}
-
-const staticTierStyles: Record<"tier2" | "tier3", StaticTierStyle> = {
-  tier2: {
-    Icon: ShieldCheck,
-    eyebrow: "Core Skill",
-    imgBox: "h-16 w-16 md:h-20 md:w-20",
-    titleSize: "text-lg",
-    padding: "p-6",
-    borderIdle: "border-gray-800/60",
-    borderHover: "group-hover:border-blue-500/60",
-    glow: "group-hover:shadow-[0_0_44px_-12px_rgba(59,130,246,0.45)]",
-    lift: -6,
-  },
-  tier3: {
-    Icon: Sparkles,
-    eyebrow: "Verified",
-    imgBox: "h-10 w-10 md:h-11 md:w-11",
-    titleSize: "text-sm",
-    padding: "p-4",
-    borderIdle: "border-gray-800/50",
-    borderHover: "group-hover:border-blue-500/35",
-    glow: "group-hover:shadow-[0_0_20px_-10px_rgba(59,130,246,0.3)]",
-    lift: -3,
-  },
-};
-
-interface StaticBadgeCardProps {
-  badge: Badge;
-  index: number;
-  tier: "tier2" | "tier3";
-}
-
-const StaticBadgeCard: React.FC<StaticBadgeCardProps> = React.memo(({ badge, index, tier }) => {
-  const s = staticTierStyles[tier];
-  return (
-    <motion.div
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
-      className="group"
-    >
-      <motion.a
-        href={badge.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
-        whileHover={{ y: s.lift }}
-        whileTap={{ scale: 0.97 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className={`relative flex h-full flex-col rounded-[24px] border ${s.borderIdle} ${s.borderHover} ${s.glow} bg-gradient-to-br from-gray-900/90 to-black/80 ${s.padding} backdrop-blur-sm transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80`}
-      >
-        <div className="mb-3 flex items-center justify-between">
-          <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500 transition-colors group-hover:text-blue-400">
-            <s.Icon className="h-3 w-3" strokeWidth={2.5} />
-            {s.eyebrow}
-          </span>
-          {tier === "tier2" && (
-            <ArrowUpRight className="h-3.5 w-3.5 text-gray-600 opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-blue-400 group-hover:opacity-100" />
+          {/* Autoplay progress */}
+          {count > 1 && (
+            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white/5">
+              {autoplay ? (
+                <motion.div
+                  key={`progress-${index}`}
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
+                  className="h-full bg-blue-500"
+                />
+              ) : (
+                <div className="h-full w-full bg-blue-500/40" />
+              )}
+            </div>
           )}
         </div>
 
-        <div className="mb-4 flex flex-1 items-center justify-center">
+        {/* ---------------- Minimal code rail ---------------- */}
+        <nav className="min-w-0" aria-label="Select credential">
           <div
-            className={`${s.imgBox} flex items-center justify-center rounded-xl border border-gray-700/50 bg-gradient-to-br from-gray-800 to-gray-900 p-2 transition-colors duration-300 group-hover:border-blue-800/50`}
+            ref={railRef}
+            className="relative -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {items.map((item, i) => {
+              const active = i === index;
+              return (
+                <button
+                  key={item.link + item.name}
+                  type="button"
+                  onClick={() => select(i)}
+                  title={item.name}
+                  aria-current={active ? "true" : undefined}
+                  aria-label={`Show ${item.code ? item.code + " " : ""}${item.name}`}
+                  className={`shrink-0 snap-center rounded-xl border px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80 lg:py-3 ${
+                    active
+                      ? "border-blue-500/60 bg-blue-500/15 text-blue-200"
+                      : "border-white/10 bg-white/[0.02] text-gray-400 hover:border-white/25 hover:text-white"
+                  }`}
+                >
+                  {item.code ?? "Internship"}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      </div>
+
+      <p className="mt-3 text-center text-xs text-gray-600 lg:hidden">Swipe the card or tap a code to explore</p>
+    </div>
+  );
+};
+
+// ============================================================
+// CLOUD + ADDITIONAL CARDS
+// ============================================================
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, delay: Math.min(i * 0.05, 0.4), ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+const CredentialCard: React.FC<{ badge: Badge; index: number; variant: "feature" | "compact" }> = React.memo(
+  ({ badge, index, variant }) => {
+    const compact = variant === "compact";
+    return (
+      <motion.div
+        custom={index}
+        variants={cardVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+      >
+        <motion.a
+          href={badge.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`View credential: ${badge.name} by ${badge.issuer}`}
+          whileHover={{ y: compact ? -2 : -4 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          className={`group relative flex h-full rounded-2xl border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:border-blue-500/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80 ${
+            compact ? "items-center gap-3 p-3" : "flex-col items-center p-5 text-center"
+          }`}
+        >
+          <span
+            className={`flex shrink-0 items-center justify-center rounded-xl bg-black/40 p-1.5 ${
+              compact ? "h-11 w-11" : "mb-4 h-20 w-20 md:h-24 md:w-24"
+            }`}
           >
             <img
               src={badge.img}
               alt={badge.name}
               draggable={false}
-              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-110"
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             />
-          </div>
-        </div>
-
-        <div className="text-center">
-          <h4 className={`${s.titleSize} font-bold leading-tight text-white transition-colors group-hover:text-blue-400`}>
-            {badge.name.trim()}
-          </h4>
-          <p className="mt-1 text-xs font-medium text-gray-500">{badge.issuer.trim()}</p>
-        </div>
-      </motion.a>
-    </motion.div>
-  );
-});
-StaticBadgeCard.displayName = "StaticBadgeCard";
+          </span>
+          <span className={compact ? "min-w-0 flex-1" : "block"}>
+            <span
+              className={`block font-semibold text-white ${compact ? "truncate text-sm" : "text-base leading-snug"}`}
+            >
+              {badge.name}
+            </span>
+            <span className="mt-0.5 block text-xs text-gray-500">{badge.issuer}</span>
+          </span>
+          <ArrowUpRight
+            className={`h-4 w-4 shrink-0 text-gray-600 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-400 ${
+              compact ? "" : "absolute right-3 top-3 opacity-0 group-hover:opacity-100"
+            }`}
+          />
+        </motion.a>
+      </motion.div>
+    );
+  }
+);
+CredentialCard.displayName = "CredentialCard";
 
 // ============================================================
 // SECTION
 // ============================================================
 const BadgesSection: React.FC = () => {
+  const stats = useMemo(() => STATS, []);
+
   return (
-    <section className="relative mb-0 overflow-hidden bg-black py-20">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#010d24] via-[#00030b] to-black opacity-90" />
-        <div className="absolute -left-32 top-10 h-96 w-96 rounded-full bg-blue-600/10 blur-[120px]" />
-        <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-blue-500/10 blur-[100px]" />
-      </div>
+    <MotionConfig reducedMotion="user">
+      <section className="relative overflow-hidden bg-black py-12 md:py-16" aria-labelledby="badges-heading">
+        {/* Single soft glow — decoration kept deliberately quiet so content leads */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[480px]"
+          style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(37,99,235,0.14), transparent)" }}
+        />
 
-      <div className="container relative z-10 mx-auto px-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
-          <motion.h2
-            className="mb-6 text-4xl font-bold text-white md:text-6xl"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            Badges{" "}
-            <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent drop-shadow-lg">
-              & Certification
-            </span>
-          </motion.h2>
-          <motion.p
-            className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-400 md:text-xl"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            A collection of badges and certifications that reflect my expertise and growth in technology
-          </motion.p>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Header: compact, one-line recruiter message */}
           <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "120px" }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mx-auto mt-6 h-1 rounded-full bg-gradient-to-r from-blue-600 to-blue-400"
-          />
-        </motion.div>
+            transition={{ duration: 0.5 }}
+            className="mx-auto mb-8 max-w-4xl text-center md:mb-10"
+          >
+            <span className="mb-2 inline-block text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-400">
+              Certifications &amp; Credentials
+            </span>
+            <h2
+              id="badges-heading"
+              className="text-2xl font-bold leading-snug tracking-tight text-white sm:text-3xl xl:text-4xl"
+            >
+Certified{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+ Professional
+              </span>
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
+               Specialized in Microsoft Fabric, Azure Administration, DevOps and Enterprise Analytics.
+            </p>
+          </motion.div>
 
-        {/* TIER 1 — Spotlight */}
-        <SpotlightHero items={TIER1_BADGES} />
+          {/* Flagship */}
+          <FlagshipShowcase items={FLAGSHIP} />
 
-        {/* TIER 2 — Core Expertise */}
-        <div className="mb-20">
-          <SectionEyebrow
-            label="Tier 2 · Core Expertise"
-            description="Cloud credentials that strongly support my profile."
-          />
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {TIER2_BADGES.map((badge, index) => (
-              <StaticBadgeCard key={badge.link + badge.name} badge={badge} index={index} tier="tier2" />
+          {/* Cloud platforms */}
+          <div className="mb-12 md:mb-14">
+            <GroupHeading
+              title="Cloud Platform Credentials"
+              description="Google Cloud and AWS Educate credentials that reinforce my cloud foundation."
+              count={CLOUD.length}
+            />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+              {CLOUD.map((badge, i) => (
+                <CredentialCard key={badge.link + badge.name} badge={badge} index={i} variant="feature" />
+              ))}
+            </div>
+          </div>
+
+          {/* Additional learning */}
+          <div>
+            <GroupHeading
+              title="Additional Learning"
+              description="Cisco networking, security and Python badges showing continuous hands-on learning."
+              count={ADDITIONAL.length}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {ADDITIONAL.map((badge, i) => (
+                <CredentialCard key={badge.link + badge.name} badge={badge} index={i} variant="compact" />
+              ))}
+            </div>
+          </div>
+
+          {/* Stats — computed from the data above */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto mt-12 grid max-w-3xl grid-cols-3 gap-3 md:mt-14 md:gap-6"
+          >
+            {stats.map((s) => (
+              <div
+                key={s.label}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] px-3 py-5 text-center md:px-6 md:py-6"
+              >
+                <div className="text-2xl font-bold tabular-nums text-blue-400 md:text-4xl">{s.value}</div>
+                <div className="mt-1 text-xs font-medium text-gray-400 md:text-sm">{s.label}</div>
+              </div>
             ))}
-          </div>
+          </motion.div>
         </div>
-
-        {/* TIER 3 — Additional Learning */}
-        <div>
-          <SectionEyebrow
-            label="Tier 3 · Additional Learning"
-            description="Badges that show continuous, hands-on learning."
-          />
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-5">
-            {TIER3_BADGES.map((badge, index) => (
-              <StaticBadgeCard key={badge.link + badge.name} badge={badge} index={index} tier="tier3" />
-            ))}
-          </div>
-        </div>
-
-        {/* Stats section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-20 text-center"
-        >
-          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="transform cursor-pointer rounded-xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-black/30 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-blue-500/40">
-              <div className="mb-2 text-3xl font-bold text-blue-400">12+</div>
-              <div className="font-medium text-gray-300">Technologies Mastered</div>
-            </div>
-
-            <div className="transform cursor-pointer rounded-xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-black/30 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-blue-500/40">
-              <div className="mb-2 text-3xl font-bold text-blue-400">25+</div>
-              <div className="font-medium text-gray-300">Projects Completed</div>
-            </div>
-
-            <div className="transform cursor-pointer rounded-xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-black/30 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-blue-500/40">
-              <div className="mb-2 text-3xl font-bold text-blue-400">100%</div>
-              <div className="font-medium text-gray-300">Verified</div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Signature spotlight halo + reduced-motion support */}
-      <style>{`
-        .spotlight-halo {
-          background: conic-gradient(from 0deg, #3b82f6, transparent 25%, #60a5fa, transparent 75%, #3b82f6);
-          animation: spin-halo 6s linear infinite;
-        }
-        @keyframes spin-halo {
-          to { transform: rotate(360deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .spotlight-halo { animation: none; }
-          * {
-            animation-duration: 0.01ms !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
-    </section>
+      </section>
+    </MotionConfig>
   );
 };
 
